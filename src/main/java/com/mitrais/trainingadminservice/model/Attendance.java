@@ -26,7 +26,7 @@ public class Attendance {
     
     @Id
     @GeneratedValue
-    private int attendanceId; //PK
+    private Integer attendanceId; //PK
     private int courseScheduleId; //FK = CourseSchedule
     private int courseParticipantsId; //FK = CourseParticipants
     private int status;

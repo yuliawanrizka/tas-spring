@@ -12,7 +12,7 @@
 
 package com.mitrais.trainingadminservice.model;
 
-import java.time.Clock;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,13 +28,13 @@ public class TrainingPeriod {
 
     @Id
     @GeneratedValue
-    private int trainingPeriodId; //PK
+    private Integer trainingPeriodId; //PK
     private LocalDate startDate;
     private LocalDate endDate;
     private int creatorId; //FK = UserRole
-    private Clock createdDate;
+    private Timestamp createdDate;
     private int updaterId;
-    private Clock updateDate; //FK = UserRole
+    private Timestamp updateDate; //FK = UserRole
 
     public int getTrainingPeriodId() {
         return trainingPeriodId;
@@ -64,11 +64,11 @@ public class TrainingPeriod {
         this.creatorId = creatorId;
     }
 
-    public Clock getCreatedDate() {
+    public Timestamp getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Clock createdDate) {
+    public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -80,11 +80,11 @@ public class TrainingPeriod {
         this.updaterId = updaterId;
     }
 
-    public Clock getUpdateDate() {
+    public Timestamp getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(Clock updateDate) {
+    public void setUpdateDate(Timestamp updateDate) {
         this.updateDate = updateDate;
     }
 }

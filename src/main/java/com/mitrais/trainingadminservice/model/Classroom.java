@@ -26,7 +26,7 @@ public class Classroom {
 
     @Id
     @GeneratedValue
-    private int classroomId; //PK
+    private Integer classroomId; //PK
     private String classroomName;
     private int locationId; //FK = Location
 

@@ -26,7 +26,7 @@ public class CourseName {
     
     @Id
     @GeneratedValue
-    private int courseNameId; //PK
+    private Integer courseNameId; //PK
     private String courseName;
 
     public int getCourseNameId() {

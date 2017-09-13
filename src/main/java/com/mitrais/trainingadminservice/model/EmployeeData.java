@@ -26,7 +26,7 @@ public class EmployeeData {
     
     @Id
     @GeneratedValue
-    private int employeeId; //PK
+    private Integer employeeId; //PK
     private String fullName;
     private int gradeId; //FK = Grade
     private String stream;

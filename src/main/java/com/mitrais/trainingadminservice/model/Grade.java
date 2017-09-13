@@ -26,7 +26,7 @@ import javax.persistence.Id;
 public class Grade {
     @Id
     @GeneratedValue
-    private int gradeId; //PK
+    private Integer gradeId; //PK
     private String jobFamily;
     private String grade;
 

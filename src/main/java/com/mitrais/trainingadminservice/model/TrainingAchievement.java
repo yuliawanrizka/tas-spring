@@ -26,7 +26,7 @@ public class TrainingAchievement {
     
     @Id
     @GeneratedValue
-    private int trainingAchievementId; //PK
+    private Integer trainingAchievementId; //PK
     private int courseNameId; //FK = CourseName
     private int courseParticipantsId; //FK = CourseParticipants
     private int achievement;

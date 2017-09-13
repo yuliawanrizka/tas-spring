@@ -26,7 +26,7 @@ public class Course {
     
     @Id
     @GeneratedValue
-    private int courseId; //PK
+    private Integer courseId; //PK
     private int courseNameId; //FK = CourseName
     private int trainingPeriodId; //FK = TrainingPeriod
     private int capacity;

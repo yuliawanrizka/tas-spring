@@ -26,7 +26,7 @@ public class Roles {
     
     @Id
     @GeneratedValue
-    private int roleId; //PK
+    private Integer roleId; //PK
     private String roleName;
 
     public int getRoleId() {

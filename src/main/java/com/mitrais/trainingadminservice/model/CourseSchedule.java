@@ -28,7 +28,7 @@ public class CourseSchedule {
 
     @Id
     @GeneratedValue
-    private int courseScheduleId; //PK
+    private Integer courseScheduleId; //PK
     private int courseId; //FK = Course
     private int classroomId; //FK = Classroom
     private LocalDate date;

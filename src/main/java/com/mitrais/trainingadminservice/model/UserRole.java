@@ -26,7 +26,27 @@ public class UserRole {
 
     @Id
     @GeneratedValue
-    private int userRoleId; //PK
+    private Integer userRoleId; //PK
     private int employeeId; //FK = Employee
     private int roleId;//FK = Roles
+
+    public Integer getUserRoleId() {
+        return userRoleId;
+    }
+
+    public int getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public int getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
+    }
 }
