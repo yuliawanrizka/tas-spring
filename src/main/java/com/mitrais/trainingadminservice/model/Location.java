@@ -25,7 +25,7 @@ import javax.persistence.Id;
 public class Location {
     @Id
     @GeneratedValue
-    private int locationId; //PK
+    private Integer locationId; //PK
     private String cityName;
 
     public int getLocationId() {

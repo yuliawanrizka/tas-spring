@@ -25,7 +25,7 @@ import javax.persistence.Id;
 public class Trainer {
     @Id
     @GeneratedValue
-    private int trainerId; //PK
+    private Integer trainerId; //PK
     private int userRoleId; //FK = UserRole
     private int courseId; //FK = Course
     private int trainerRank;

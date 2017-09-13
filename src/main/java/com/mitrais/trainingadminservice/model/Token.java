@@ -12,7 +12,7 @@
 
 package com.mitrais.trainingadminservice.model;
 
-import java.time.Clock;
+import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -26,7 +26,7 @@ public class Token {
     @Id
     private String token; //PK
     private int employeeId; //FK = Employee
-    private Clock expiry;
+    private Timestamp expiry;
     private boolean rememberMe;
 
     public String getToken() {
@@ -45,11 +45,11 @@ public class Token {
         this.employeeId = employeeId;
     }
 
-    public Clock getExpiry() {
+    public Timestamp getExpiry() {
         return expiry;
     }
 
-    public void setExpiry(Clock expiry) {
+    public void setExpiry(Timestamp expiry) {
         this.expiry = expiry;
     }
 
