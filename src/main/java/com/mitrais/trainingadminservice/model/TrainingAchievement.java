@@ -15,6 +15,7 @@ package com.mitrais.trainingadminservice.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 
 /**
@@ -27,28 +28,34 @@ public class TrainingAchievement {
     @Id
     @GeneratedValue
     private Integer trainingAchievementId; //PK
-    private int courseNameId; //FK = CourseName
-    private int courseParticipantsId; //FK = CourseParticipants
+    @ManyToOne
+    private CourseName courseName;
+    @ManyToOne
+    private CourseParticipants courseParticipants;
     private int achievement;
 
-    public int getTrainingAchievementId() {
+    public Integer getTrainingAchievementId() {
         return trainingAchievementId;
     }
 
-    public int getCourseNameId() {
-        return courseNameId;
+    public void setTrainingAchievementId(Integer trainingAchievementId) {
+        this.trainingAchievementId = trainingAchievementId;
     }
 
-    public void setCourseNameId(int courseNameId) {
-        this.courseNameId = courseNameId;
+    public CourseName getCourseName() {
+        return courseName;
     }
 
-    public int getCourseParticipantsId() {
-        return courseParticipantsId;
+    public void setCourseName(CourseName courseName) {
+        this.courseName = courseName;
     }
 
-    public void setCourseParticipantsId(int courseParticipantsId) {
-        this.courseParticipantsId = courseParticipantsId;
+    public CourseParticipants getCourseParticipants() {
+        return courseParticipants;
+    }
+
+    public void setCourseParticipants(CourseParticipants courseParticipants) {
+        this.courseParticipants = courseParticipants;
     }
 
     public int getAchievement() {

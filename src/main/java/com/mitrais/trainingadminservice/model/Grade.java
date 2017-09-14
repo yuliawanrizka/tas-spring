@@ -12,9 +12,11 @@
 
 package com.mitrais.trainingadminservice.model;
 
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 
 
@@ -24,14 +26,29 @@ import javax.persistence.Id;
  */
 @Entity
 public class Grade {
+
+    @OneToMany(mappedBy = "grade")
+    private List<EmployeeData> employeeDatas;
     @Id
     @GeneratedValue
     private Integer gradeId; //PK
     private String jobFamily;
     private String grade;
 
-    public int getGradeId() {
+    public List<EmployeeData> getEmployeeDatas() {
+        return employeeDatas;
+    }
+
+    public void setEmployeeDatas(List<EmployeeData> employeeDatas) {
+        this.employeeDatas = employeeDatas;
+    }
+
+    public Integer getGradeId() {
         return gradeId;
+    }
+
+    public void setGradeId(Integer gradeId) {
+        this.gradeId = gradeId;
     }
 
     public String getJobFamily() {

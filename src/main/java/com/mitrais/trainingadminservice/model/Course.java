@@ -12,9 +12,12 @@
 
 package com.mitrais.trainingadminservice.model;
 
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 
 /**
@@ -23,33 +26,72 @@ import javax.persistence.Id;
  */
 @Entity
 public class Course {
+
+    @OneToMany(mappedBy = "course")
+    private List<Trainer> trainers;
+
+    @OneToMany(mappedBy = "course")
+    private List<CourseSchedule> courseSchedules;
+
+    @OneToMany(mappedBy = "course")
+    private List<CourseParticipants> courseParticipantss;
     
     @Id
     @GeneratedValue
     private Integer courseId; //PK
-    private int courseNameId; //FK = CourseName
-    private int trainingPeriodId; //FK = TrainingPeriod
+    @ManyToOne
+    private CourseName courseName;
+    @ManyToOne
+    private TrainingPeriod trainingPeriod;
     private int capacity;
     private boolean openEnrollment;
 
-    public int getCourseId() {
+    public List<Trainer> getTrainers() {
+        return trainers;
+    }
+
+    public void setTrainers(List<Trainer> trainers) {
+        this.trainers = trainers;
+    }
+
+    public List<CourseSchedule> getCourseSchedules() {
+        return courseSchedules;
+    }
+
+    public void setCourseSchedules(List<CourseSchedule> courseSchedules) {
+        this.courseSchedules = courseSchedules;
+    }
+
+    public List<CourseParticipants> getCourseParticipantss() {
+        return courseParticipantss;
+    }
+
+    public void setCourseParticipantss(List<CourseParticipants> courseParticipantss) {
+        this.courseParticipantss = courseParticipantss;
+    }
+
+    public Integer getCourseId() {
         return courseId;
     }
 
-    public int getCourseNameId() {
-        return courseNameId;
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
     }
 
-    public void setCourseNameId(int courseNameId) {
-        this.courseNameId = courseNameId;
+    public CourseName getCourseName() {
+        return courseName;
     }
 
-    public int getTrainingPeriodId() {
-        return trainingPeriodId;
+    public void setCourseName(CourseName courseName) {
+        this.courseName = courseName;
     }
 
-    public void setTrainingPeriodId(int trainingPeriodId) {
-        this.trainingPeriodId = trainingPeriodId;
+    public TrainingPeriod getTrainingPeriod() {
+        return trainingPeriod;
+    }
+
+    public void setTrainingPeriod(TrainingPeriod trainingPeriod) {
+        this.trainingPeriod = trainingPeriod;
     }
 
     public int getCapacity() {

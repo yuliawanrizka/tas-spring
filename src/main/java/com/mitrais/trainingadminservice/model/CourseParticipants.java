@@ -12,9 +12,12 @@
 
 package com.mitrais.trainingadminservice.model;
 
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 
 /**
@@ -23,30 +26,58 @@ import javax.persistence.Id;
  */
 @Entity
 public class CourseParticipants {
+
+    @OneToMany(mappedBy = "courseParticipants")
+    private List<TrainingAchievement> trainingAchievements;
+
+    @OneToMany(mappedBy = "courseParticipants")
+    private List<Attendance> attendances;
     
     @Id
     @GeneratedValue
     private Integer courseParticipantsId; //PK
-    private int userRoleId; //FK = UserRole
-    private int courseId; // FK = Course
+    @ManyToOne
+    private UserRole userRole;
+    @ManyToOne
+    private Course course;
 
-    public int getCourseParticipantsId() {
+    public List<TrainingAchievement> getTrainingAchievements() {
+        return trainingAchievements;
+    }
+
+    public void setTrainingAchievements(List<TrainingAchievement> trainingAchievements) {
+        this.trainingAchievements = trainingAchievements;
+    }
+
+    public List<Attendance> getAttendances() {
+        return attendances;
+    }
+
+    public void setAttendances(List<Attendance> attendances) {
+        this.attendances = attendances;
+    }
+
+    public Integer getCourseParticipantsId() {
         return courseParticipantsId;
     }
 
-    public int getUserRoleId() {
-        return userRoleId;
+    public void setCourseParticipantsId(Integer courseParticipantsId) {
+        this.courseParticipantsId = courseParticipantsId;
     }
 
-    public void setUserRoleId(int userRoleId) {
-        this.userRoleId = userRoleId;
+    public UserRole getUserRole() {
+        return userRole;
     }
 
-    public int getCourseId() {
-        return courseId;
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
     }
 
-    public void setCourseId(int courseId) {
-        this.courseId = courseId;
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 }

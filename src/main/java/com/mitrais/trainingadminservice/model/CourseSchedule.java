@@ -14,9 +14,12 @@ package com.mitrais.trainingadminservice.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 
 /**
@@ -26,33 +29,50 @@ import javax.persistence.Id;
 @Entity
 public class CourseSchedule {
 
+    @OneToMany(mappedBy = "courseSchedule")
+    private List<Attendance> attendances;
+
     @Id
     @GeneratedValue
     private Integer courseScheduleId; //PK
-    private int courseId; //FK = Course
-    private int classroomId; //FK = Classroom
+    @ManyToOne
+    private Course course;
+    @ManyToOne
+    private Classroom classroom;
     private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
 
-    public int getCourseScheduleId() {
+    public List<Attendance> getAttendances() {
+        return attendances;
+    }
+
+    public void setAttendances(List<Attendance> attendances) {
+        this.attendances = attendances;
+    }
+
+    public Integer getCourseScheduleId() {
         return courseScheduleId;
     }
 
-    public int getCourseId() {
-        return courseId;
+    public void setCourseScheduleId(Integer courseScheduleId) {
+        this.courseScheduleId = courseScheduleId;
     }
 
-    public void setCourseId(int courseId) {
-        this.courseId = courseId;
+    public Course getCourse() {
+        return course;
     }
 
-    public int getClassroomId() {
-        return classroomId;
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
-    public void setClassroomId(int classroomId) {
-        this.classroomId = classroomId;
+    public Classroom getClassroom() {
+        return classroom;
+    }
+
+    public void setClassroom(Classroom classroom) {
+        this.classroom = classroom;
     }
 
     public LocalDate getDate() {
@@ -78,4 +98,5 @@ public class CourseSchedule {
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
+    
 }

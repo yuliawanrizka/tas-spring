@@ -12,9 +12,11 @@
 
 package com.mitrais.trainingadminservice.model;
 
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 
 /**
@@ -23,14 +25,40 @@ import javax.persistence.Id;
  */
 @Entity
 public class CourseName {
+
+    @OneToMany(mappedBy = "courseName")
+    private List<TrainingAchievement> trainingAchievements;
+
+    @OneToMany(mappedBy = "courseName")
+    private List<Course> courses;
     
     @Id
     @GeneratedValue
     private Integer courseNameId; //PK
     private String courseName;
 
-    public int getCourseNameId() {
+    public List<TrainingAchievement> getTrainingAchievements() {
+        return trainingAchievements;
+    }
+
+    public void setTrainingAchievements(List<TrainingAchievement> trainingAchievements) {
+        this.trainingAchievements = trainingAchievements;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
+    public Integer getCourseNameId() {
         return courseNameId;
+    }
+
+    public void setCourseNameId(Integer courseNameId) {
+        this.courseNameId = courseNameId;
     }
 
     public String getCourseName() {

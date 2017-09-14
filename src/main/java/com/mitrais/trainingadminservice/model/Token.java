@@ -15,6 +15,7 @@ package com.mitrais.trainingadminservice.model;
 import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 
 /**
@@ -25,7 +26,8 @@ import javax.persistence.Id;
 public class Token {
     @Id
     private String token; //PK
-    private int employeeId; //FK = Employee
+    @OneToOne
+    private EmployeeData employee;
     private Timestamp expiry;
     private boolean rememberMe;
 
@@ -37,12 +39,12 @@ public class Token {
         this.token = token;
     }
 
-    public int getEmployeeId() {
-        return employeeId;
+    public EmployeeData getEmployee() {
+        return employee;
     }
 
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
+    public void setEmployee(EmployeeData employee) {
+        this.employee = employee;
     }
 
     public Timestamp getExpiry() {

@@ -15,6 +15,7 @@ package com.mitrais.trainingadminservice.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 
 /**
@@ -27,28 +28,34 @@ public class Attendance {
     @Id
     @GeneratedValue
     private Integer attendanceId; //PK
-    private int courseScheduleId; //FK = CourseSchedule
-    private int courseParticipantsId; //FK = CourseParticipants
+    @ManyToOne
+    private CourseSchedule courseSchedule;
+    @ManyToOne
+    private CourseParticipants courseParticipants;
     private int status;
 
-    public int getAttendanceId() {
+    public Integer getAttendanceId() {
         return attendanceId;
     }
 
-    public int getCourseScheduleId() {
-        return courseScheduleId;
+    public void setAttendanceId(Integer attendanceId) {
+        this.attendanceId = attendanceId;
     }
 
-    public void setCourseScheduleId(int courseScheduleId) {
-        this.courseScheduleId = courseScheduleId;
+    public CourseSchedule getCourseSchedule() {
+        return courseSchedule;
     }
 
-    public int getCourseParticipantsId() {
-        return courseParticipantsId;
+    public void setCourseSchedule(CourseSchedule courseSchedule) {
+        this.courseSchedule = courseSchedule;
     }
 
-    public void setCourseParticipantsId(int courseParticipantsId) {
-        this.courseParticipantsId = courseParticipantsId;
+    public CourseParticipants getCourseParticipants() {
+        return courseParticipants;
+    }
+
+    public void setCourseParticipants(CourseParticipants courseParticipants) {
+        this.courseParticipants = courseParticipants;
     }
 
     public int getStatus() {

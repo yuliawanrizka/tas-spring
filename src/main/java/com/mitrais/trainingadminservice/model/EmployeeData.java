@@ -12,9 +12,13 @@
 
 package com.mitrais.trainingadminservice.model;
 
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 
 /**
@@ -23,23 +27,50 @@ import javax.persistence.Id;
  */
 @Entity
 public class EmployeeData {
-    
+
+    @OneToOne(mappedBy = "employee")
+    private Token token;
+
+    @OneToMany(mappedBy = "employee")
+    private List<UserRole> userRoles;
+
     @Id
     @GeneratedValue
     private Integer employeeId; //PK
     private String fullName;
-    private int gradeId; //FK = Grade
+    @ManyToOne
+    private Grade grade;
     private String stream;
     private boolean activeEmployee;
-    private int locationId; //FK = Location
+    @ManyToOne
+    private Location location;
     private String accountName;
     private String email;
     private String password;
-    private String salt;   
+    private String salt;
 
+    public Token getToken() {
+        return token;
+    }
 
-    public int getEmployeeId() {
+    public void setToken(Token token) {
+        this.token = token;
+    }
+
+    public List<UserRole> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(List<UserRole> userRoles) {
+        this.userRoles = userRoles;
+    }
+
+    public Integer getEmployeeId() {
         return employeeId;
+    }
+
+    public void setEmployeeId(Integer employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getFullName() {
@@ -50,12 +81,12 @@ public class EmployeeData {
         this.fullName = fullName;
     }
 
-    public int getGradeId() {
-        return gradeId;
+    public Grade getGrade() {
+        return grade;
     }
 
-    public void setGradeId(int gradeId) {
-        this.gradeId = gradeId;
+    public void setGrade(Grade grade) {
+        this.grade = grade;
     }
 
     public String getStream() {
@@ -74,12 +105,12 @@ public class EmployeeData {
         this.activeEmployee = activeEmployee;
     }
 
-    public int getLocationId() {
-        return locationId;
+    public Location getLocation() {
+        return location;
     }
 
-    public void setLocationId(int locationId) {
-        this.locationId = locationId;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public String getAccountName() {

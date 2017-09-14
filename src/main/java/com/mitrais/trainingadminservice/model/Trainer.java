@@ -15,6 +15,7 @@ package com.mitrais.trainingadminservice.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 
 /**
@@ -26,28 +27,34 @@ public class Trainer {
     @Id
     @GeneratedValue
     private Integer trainerId; //PK
-    private int userRoleId; //FK = UserRole
-    private int courseId; //FK = Course
+    @ManyToOne
+    private UserRole userRole;
+    @ManyToOne
+    private Course course;
     private int trainerRank;
 
-    public int getTrainerId() {
+    public Integer getTrainerId() {
         return trainerId;
     }
 
-    public int getUserRoleId() {
-        return userRoleId;
+    public void setTrainerId(Integer trainerId) {
+        this.trainerId = trainerId;
     }
 
-    public void setUserRoleId(int userRoleId) {
-        this.userRoleId = userRoleId;
+    public UserRole getUserRole() {
+        return userRole;
     }
 
-    public int getCourseId() {
-        return courseId;
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
     }
 
-    public void setCourseId(int courseId) {
-        this.courseId = courseId;
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     public int getTrainerRank() {

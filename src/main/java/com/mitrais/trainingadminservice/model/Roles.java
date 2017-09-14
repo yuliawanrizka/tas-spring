@@ -12,9 +12,11 @@
 
 package com.mitrais.trainingadminservice.model;
 
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 
 /**
@@ -23,14 +25,29 @@ import javax.persistence.Id;
  */
 @Entity
 public class Roles {
+
+    @OneToMany(mappedBy = "role")
+    private List<UserRole> userRoles;
     
     @Id
     @GeneratedValue
     private Integer roleId; //PK
     private String roleName;
 
-    public int getRoleId() {
+    public List<UserRole> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(List<UserRole> userRoles) {
+        this.userRoles = userRoles;
+    }
+
+    public Integer getRoleId() {
         return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 
     public String getRoleName() {

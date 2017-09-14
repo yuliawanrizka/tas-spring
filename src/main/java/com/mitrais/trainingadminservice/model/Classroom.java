@@ -12,9 +12,12 @@
 
 package com.mitrais.trainingadminservice.model;
 
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 
 /**
@@ -24,14 +27,30 @@ import javax.persistence.Id;
 @Entity
 public class Classroom {
 
+    @OneToMany(mappedBy = "classroom")
+    private List<CourseSchedule> courseSchedules;
+
     @Id
     @GeneratedValue
     private Integer classroomId; //PK
     private String classroomName;
-    private int locationId; //FK = Location
+    @ManyToOne
+    private Location location;
 
-    public int getClassroomId() {
+    public List<CourseSchedule> getCourseSchedules() {
+        return courseSchedules;
+    }
+
+    public void setCourseSchedules(List<CourseSchedule> courseSchedules) {
+        this.courseSchedules = courseSchedules;
+    }
+
+    public Integer getClassroomId() {
         return classroomId;
+    }
+
+    public void setClassroomId(Integer classroomId) {
+        this.classroomId = classroomId;
     }
 
     public String getClassroomName() {
@@ -42,11 +61,11 @@ public class Classroom {
         this.classroomName = classroomName;
     }
 
-    public int getLocationId() {
-        return locationId;
+    public Location getLocation() {
+        return location;
     }
 
-    public void setLocationId(int locationId) {
-        this.locationId = locationId;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

@@ -14,9 +14,12 @@ package com.mitrais.trainingadminservice.model;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 
 /**
@@ -26,20 +29,37 @@ import javax.persistence.Id;
 @Entity
 public class TrainingPeriod {
 
+    @OneToMany(mappedBy = "trainingPeriod")
+    private List<Course> courses;
+
     @Id
     @GeneratedValue
     private Integer trainingPeriodId; //PK
     private LocalDate startDate;
     private LocalDate endDate;
-    private int creatorId; //FK = UserRole
+    @ManyToOne
+    private UserRole creator;
     private Timestamp createdDate;
-    private int updaterId;
-    private Timestamp updateDate; //FK = UserRole
+    @ManyToOne
+    private UserRole updater;
+    private Timestamp updateDate;
 
-    public int getTrainingPeriodId() {
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
+    public Integer getTrainingPeriodId() {
         return trainingPeriodId;
     }
-    
+
+    public void setTrainingPeriodId(Integer trainingPeriodId) {
+        this.trainingPeriodId = trainingPeriodId;
+    }
+
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -56,12 +76,12 @@ public class TrainingPeriod {
         this.endDate = endDate;
     }
 
-    public int getCreatorId() {
-        return creatorId;
+    public UserRole getCreator() {
+        return creator;
     }
 
-    public void setCreatorId(int creatorId) {
-        this.creatorId = creatorId;
+    public void setCreator(UserRole creator) {
+        this.creator = creator;
     }
 
     public Timestamp getCreatedDate() {
@@ -72,12 +92,12 @@ public class TrainingPeriod {
         this.createdDate = createdDate;
     }
 
-    public int getUpdaterId() {
-        return updaterId;
+    public UserRole getUpdater() {
+        return updater;
     }
 
-    public void setUpdaterId(int updaterId) {
-        this.updaterId = updaterId;
+    public void setUpdater(UserRole updater) {
+        this.updater = updater;
     }
 
     public Timestamp getUpdateDate() {
