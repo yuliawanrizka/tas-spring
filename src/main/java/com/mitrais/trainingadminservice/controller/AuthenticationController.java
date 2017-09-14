@@ -15,7 +15,6 @@ package com.mitrais.trainingadminservice.controller;
 import com.mitrais.trainingadminservice.model.EmployeeData;
 import com.mitrais.trainingadminservice.model.Token;
 import com.mitrais.trainingadminservice.repository.EmployeeDataRepository;
-import com.mitrais.trainingadminservice.repository.TokenRepository;
 import com.mitrais.trainingadminservice.request.AuthenticationRequest;
 import com.mitrais.trainingadminservice.response.AuthenticationResponse;
 import java.io.UnsupportedEncodingException;
@@ -28,7 +27,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +48,7 @@ public class AuthenticationController {
     public ResponseEntity login(@RequestBody final AuthenticationRequest request) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         EmployeeData employee = employeeData.findByAccountName(request.getUsername());
         String passwordCompare = Encode_SHA512(employee.getSalt() + request.getPassword());
-        if (employee.getPassword() == passwordCompare ) {
+        if (employee.getPassword() == null ? passwordCompare == null : employee.getPassword().equals(passwordCompare) ) {
             AuthenticationResponse response = new AuthenticationResponse();
             Token tokenEmployee = new Token();
             Long time = System.currentTimeMillis();
