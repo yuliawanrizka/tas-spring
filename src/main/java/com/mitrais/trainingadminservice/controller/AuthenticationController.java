@@ -50,6 +50,7 @@ public class AuthenticationController {
     public ResponseEntity functionName(@RequestBody final LoginRequest loginRequestBody) {
         
         String jwtToken = "";
+        int validTime;
         
         BCryptPasswordEncoder checker = new BCryptPasswordEncoder();
         
@@ -62,18 +63,14 @@ public class AuthenticationController {
             LoginResponse loginResponseBody = new LoginResponse();
             
             if (loginRequestBody.isRememberMe()) {
-                jwtToken = Jwts.builder().setSubject(username)
-                        .setIssuedAt(new Date())
-                        .setExpiration(new Date(System.currentTimeMillis() + (2 * 24 * 60 * 60 * 1000)))
-                        .signWith(SignatureAlgorithm.HS256, signatureKey)
-                        .compact();
+                validTime = 3 * 24 * 60 * 60 * 1000; // 3 days
             } else {
-                jwtToken = Jwts.builder().setSubject(username)
-                        .setIssuedAt(new Date())
-                        .setExpiration(new Date(System.currentTimeMillis() + (2 * 60 * 60 * 1000)))
+                validTime = 3 * 60 * 60 * 1000; // 3 hours
+            }
+            jwtToken = Jwts.builder().setSubject(username)
+                        .setExpiration(new Date(System.currentTimeMillis() + validTime))
                         .signWith(SignatureAlgorithm.HS256, signatureKey)
                         .compact();
-            }
            
             int[] role = new int[]{1, 2, 3, 4};
             loginResponseBody.setFullName(employee.getFullName());
@@ -84,12 +81,5 @@ public class AuthenticationController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or Password is incorrect");
         }
-    }
-    
-    @GetMapping(value = "test")
-    public String  functionName() {
-        String jwtToken = Jwts.builder().setSubject("me").setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + (3600 * 1000)))
-                        .signWith(SignatureAlgorithm.HS256, signatureKey).compact();
-        return jwtToken;
     }
 }
