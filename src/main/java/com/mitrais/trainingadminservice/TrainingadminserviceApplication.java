@@ -14,7 +14,7 @@ public class TrainingadminserviceApplication {
 	public FilterRegistrationBean jwtFilter() {
 		final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
 		registrationBean.setFilter(new AuthenticationFilter());
-		registrationBean.addUrlPatterns("/secure/*");
+		registrationBean.addUrlPatterns("/api/secure/*");
 
 		return registrationBean;
         }
