@@ -23,5 +23,5 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-
+    Employee findByAccountName(String accountName);
 }
