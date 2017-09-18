@@ -48,10 +48,11 @@ public class AuthenticationFilter extends GenericFilterBean{
         final String token = authHeader.substring(7);
 
         try {
-            Jwts.parser()
-                    .setSigningKey(signatureKey)
-                    .parseClaimsJws(token)
-                    .getBody();
+            final Claims claims = Jwts.parser()
+                                    .setSigningKey(signatureKey)
+                                    .parseClaimsJws(token)
+                                    .getBody();
+            request.setAttribute("claims", claims);
         } catch (final SignatureException | ExpiredJwtException e) {
             throw new ServletException("Invalid or Expired Session");
         }
