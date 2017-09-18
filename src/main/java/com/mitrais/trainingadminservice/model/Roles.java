@@ -26,20 +26,10 @@ import javax.persistence.OneToMany;
 @Entity
 public class Roles {
 
-    @OneToMany(mappedBy = "roles")
-    private List<UserRole> userRoles;
     @Id
     @GeneratedValue
     private Long roleId;
     private String roleName;
-
-    public List<UserRole> getUserRoles() {
-        return userRoles;
-    }
-
-    public void setUserRoles(List<UserRole> userRoles) {
-        this.userRoles = userRoles;
-    }
 
     public Long getRoleId() {
         return roleId;

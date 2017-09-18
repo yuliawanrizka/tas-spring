@@ -56,30 +56,30 @@ public class AuthenticationController {
         String username = loginRequestBody.getUsername();
         String password = loginRequestBody.getPassword();
         
-        Employee employee = employeeRepository.findByAccountName(username);
+        Employee employee = employeeRepository.findByAccountName("mitrais\\" + username);
         
-        if (checker.matches(password, employee.getPassword())) {
-            LoginResponse loginResponseBody = new LoginResponse();
-            
-            if (loginRequestBody.isRememberMe()) {
-                validTime = 3 * 24 * 60 * 60 * 1000; // 3 days
+            if (employee != null || checker.matches(password, employee.getPassword())) {
+                LoginResponse loginResponseBody = new LoginResponse();
+
+                if (loginRequestBody.isRememberMe()) {
+                    validTime = 3 * 24 * 60 * 60 * 1000; // 3 days
+                } else {
+                    validTime = 3 * 60 * 60 * 1000; // 3 hours
+                }
+                jwtToken = Jwts.builder().setSubject(username)
+                            .claim("userId", employee.getEmployeeId())
+                            .setExpiration(new Date(System.currentTimeMillis() + validTime))
+                            .signWith(SignatureAlgorithm.HS256, signatureKey)
+                            .compact();
+
+                int role = 1;
+                loginResponseBody.setFullName(employee.getFullName());
+                loginResponseBody.setRole(role);
+                loginResponseBody.setToken(jwtToken);
+                
+                return ResponseEntity.ok(loginResponseBody);
             } else {
-                validTime = 3 * 60 * 60 * 1000; // 3 hours
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or Password is incorrect");
             }
-            jwtToken = Jwts.builder().setSubject(username)
-                        .claim("userId", employee.getEmployeeId())
-                        .setExpiration(new Date(System.currentTimeMillis() + validTime))
-                        .signWith(SignatureAlgorithm.HS256, signatureKey)
-                        .compact();
-           
-            int[] role = new int[]{1, 2, 3, 4};
-            loginResponseBody.setFullName(employee.getFullName());
-            loginResponseBody.setRole(role);
-            loginResponseBody.setToken(jwtToken);
-            
-            return ResponseEntity.ok(loginResponseBody);
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or Password is incorrect");
-        }
     }
 }

@@ -29,12 +29,8 @@ public class UserRole {
     @Id
     @GeneratedValue
     private Long userRoleId;
-    @ManyToOne
-    @JoinColumn(name = "employeeId")
-    private Employee employee;
-    @ManyToOne
-    @JoinColumn(name = "roleId")
-    private Roles roles;
+    private Long employeeId;
+    private Long roleId;
 
     public Long getUserRoleId() {
         return userRoleId;
@@ -44,19 +40,19 @@ public class UserRole {
         this.userRoleId = userRoleId;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 
-    public Roles getRoles() {
-        return roles;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setRoles(Roles roles) {
-        this.roles = roles;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 }

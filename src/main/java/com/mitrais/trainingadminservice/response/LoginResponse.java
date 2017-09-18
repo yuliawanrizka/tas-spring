@@ -19,7 +19,7 @@ package com.mitrais.trainingadminservice.response;
  */
 public class LoginResponse {
     private String fullName;
-    private int[] role;
+    private int role;
     private String token;
 
     public String getFullName() {
@@ -30,11 +30,11 @@ public class LoginResponse {
         this.fullName = fullName;
     }
 
-    public int[] getRole() {
+    public int getRole() {
         return role;
     }
 
-    public void setRole(int[] role) {
+    public void setRole(int role) {
         this.role = role;
     }
 
