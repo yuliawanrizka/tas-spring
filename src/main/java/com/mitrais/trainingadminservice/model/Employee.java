@@ -33,6 +33,15 @@ public class Employee {
     private String stream;
     private String email;
     private boolean active;
+    private Long locationId;
+
+    public Long getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(Long locationId) {
+        this.locationId = locationId;
+    }
 
     public Long getGradeId() {
         return gradeId;

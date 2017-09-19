@@ -58,7 +58,7 @@ public class AuthenticationController {
         
         Employee employee = employeeRepository.findByAccountName("mitrais\\" + username);
         
-            if (employee != null || checker.matches(password, employee.getPassword())) {
+            if (employee != null && checker.matches(password, employee.getPassword())) {
                 LoginResponse loginResponseBody = new LoginResponse();
 
                 if (loginRequestBody.isRememberMe()) {
