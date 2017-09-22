@@ -1,4 +1,4 @@
-package com.mitrais.trainingadminservice;
+package com.mitrais.trainingadminservice.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
