@@ -1,5 +1,5 @@
 /*
- * @(#) CorsFilter.java, v 1.0 2017/09/22 14:54:12
+ * @(#) SimpleCorsFilter.java, v 1.0 2017/09/22 15:23:13
  * 
  * Copyright (c) 2017, PT. Mitrais, Bali, Indonesia.
  * All rights reserved.
@@ -32,9 +32,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class CorsFilter implements Filter{
-
-    public CorsFilter() {
+public class SimpleCorsFilter implements Filter{
+    
+    public SimpleCorsFilter() {
     }
 
     @Override
@@ -60,5 +60,4 @@ public class CorsFilter implements Filter{
     @Override
     public void destroy() {
     }
-
 }
