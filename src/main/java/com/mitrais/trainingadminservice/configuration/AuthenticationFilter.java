@@ -10,7 +10,7 @@
  * 
  */
 
-package com.mitrais.trainingadminservice.controller;
+package com.mitrais.trainingadminservice.configuration;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

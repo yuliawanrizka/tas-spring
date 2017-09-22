@@ -13,11 +13,13 @@
 package com.mitrais.trainingadminservice.controller;
 
 import com.mitrais.trainingadminservice.model.TrainingPeriod;
+import com.mitrais.trainingadminservice.repository.EmployeeRepository;
 import com.mitrais.trainingadminservice.repository.TrainingPeriodRepository;
+import com.mitrais.trainingadminservice.repository.UserRoleRepository;
 import com.mitrais.trainingadminservice.response.PeriodResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,25 +38,51 @@ public class PeriodController {
     
     @Autowired
     private TrainingPeriodRepository trainingPeriodRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
+    @Autowired
+    private UserRoleRepository userRoleRepository;
     
     @GetMapping(value = "")
     public ResponseEntity getAllPeriod() {
-        List<PeriodResponse> response = new ArrayList<PeriodResponse>();
-        try {
-            List<TrainingPeriod> data = trainingPeriodRepository.findAll();
-            data.forEach( d -> {
+        
+        List<PeriodResponse> response = new ArrayList<>();
+        
+        List<TrainingPeriod> trainingPeriod = trainingPeriodRepository.findAll();
+        HashMap<Long,String> adminList = new HashMap<>();
+        
+        if(!(trainingPeriod.isEmpty())) {
+            trainingPeriod.forEach( data -> {
                 PeriodResponse result = new PeriodResponse();
-                System.out.println(d.getTrainingName());
-                result.setTrainingName(d.getTrainingName());
-                result.setActiveStatus(d.isActive());
-                result.setStartDate(d.getStartDate());
+                
+                result.setTrainingName(data.getTrainingName());
+                result.setActiveStatus(data.isActive());
+                result.setStartDate(data.getStartDate());
+                result.setEndDate(data.getEndDate());
+                
+                if(adminList.isEmpty() || !(adminList.containsKey(data.getCreatorId()))){
+                    adminList.put(data.getCreatorId(), getFullName(data.getCreatorId()));
+                }
+                result.setCreatedBy(adminList.get(data.getCreatorId()));
+                
+                if(data.getUpdaterId() != null ) {
+                    if(!(adminList.containsKey(data.getUpdaterId()))) {
+                        adminList.put(data.getUpdaterId(), getFullName(data.getUpdaterId()));
+                    }
+                result.setEditedBy(adminList.get(data.getUpdaterId()));
+                } else {
+                    result.setEditedBy("-");
+                }
+                
                 response.add(result);
             });
             return ResponseEntity.ok(response);
-            
-        } catch (EntityNotFoundException ex){
+        } else {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
-        
+    }
+    
+    private String getFullName (Long id) {
+        return employeeRepository.getOne(userRoleRepository.getOne(id).getEmployeeId()).getFullName();
     }
 }
