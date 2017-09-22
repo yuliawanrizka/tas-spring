@@ -12,8 +12,8 @@
 
 package com.mitrais.trainingadminservice.model;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.sql.Date;
+import java.sql.Time;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -31,10 +31,82 @@ public class TrainingPeriod {
     private Long trainingPeriodId;
     private String trainingName;
     private boolean active;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private Date startDate;
+    private Date endDate;
     private Long creatorId;
-    private LocalDateTime createdAt;
+    private Time createdAt;
     private Long updaterId;
-    private LocalDateTime updatedAt;
+    private Time updatedAt;
+
+    public Long getTrainingPeriodId() {
+        return trainingPeriodId;
+    }
+
+    public void setTrainingPeriodId(Long trainingPeriodId) {
+        this.trainingPeriodId = trainingPeriodId;
+    }
+
+    public String getTrainingName() {
+        return trainingName;
+    }
+
+    public void setTrainingName(String trainingName) {
+        this.trainingName = trainingName;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Long getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(Long creatorId) {
+        this.creatorId = creatorId;
+    }
+
+    public Long getUpdaterId() {
+        return updaterId;
+    }
+
+    public void setUpdaterId(Long updaterId) {
+        this.updaterId = updaterId;
+    }
+
+    public Time getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Time createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Time getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Time updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }
