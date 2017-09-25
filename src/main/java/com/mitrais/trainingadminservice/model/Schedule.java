@@ -12,7 +12,7 @@
 
 package com.mitrais.trainingadminservice.model;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -28,7 +28,7 @@ public class Schedule {
     @GeneratedValue
     private Long scheduleId;
     private Long coursePeriodId;
-    private LocalDate date;
+    private Date date;
 
     public Long getScheduleId() {
         return scheduleId;
@@ -46,11 +46,11 @@ public class Schedule {
         this.coursePeriodId = coursePeriodId;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 }

@@ -12,7 +12,7 @@
 
 package com.mitrais.trainingadminservice.model;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -34,9 +34,9 @@ public class CoursePeriod {
     private Long backupTrainer;
     private Long classroomId;
     private Long creatorId;
-    private LocalDateTime createdAt;
+    private Timestamp createdAt;
     private Long updaterId;
-    private LocalDateTime updatedAt;
+    private Timestamp updatedAt;
     private boolean onlineClass;
 
     public Long getCoursePeriodId() {
@@ -95,11 +95,11 @@ public class CoursePeriod {
         this.creatorId = creatorId;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -111,11 +111,11 @@ public class CoursePeriod {
         this.updaterId = updaterId;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Timestamp getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }
 

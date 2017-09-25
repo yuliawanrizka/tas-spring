@@ -1,26 +1,55 @@
 # LOGIN
-    - ..../api/auth                     (post)
-        {
-            String  : username,
-            String  : password,
-            Boolean : rememberMe
-        }
+	- ..../api/auth				(post)
+		{
+
+			username	: String,
+			password	: String,
+			rememberMe	: boolean
+
+		}
+
+
+//note: "..../api/secure/*" always need authentication header
+
+
 
 # DASHBOARD
-    - ..../api/secure/dashboard/active  (get) *
-    - ..../api/secure/dashboard/bcc     (get) *
+
+	- ..../api/secure/dashboard/active	(get)	*
+	- ..../api/secure/dashboard/bcc		(get)	*
+
+
 
 # PERIOD
-    - ..../api/secure/period            (get)
 
+	- ..../api/secure/period		(get)
+
+	- ..../api/secure/period/create		(post)
+		{
+			trainingName	: String,
+			startDate	: Date,
+			endDate		: Date,
+			openEnrollment	: boolean
+		}
+
+	- ..../api/secure/period/{id}		(get)	*
+	- ..../api/secure/period/{id}/edit	(post)	*
+	- ..../api/secure/period/{id}/delete	(get)	*
 # USER
-    - ..../api/secure/user              (get) *
+	- ..../api/secure/user			(get)	*
+
+
 
 # ENROLLMENT
-    - ..../api/secure/enrollment        (get) *
+	- ..../api/secure/enrollment		(get)	*
+
+
 
 # ACHIEVEMENT
-    - ..../api/secure/achievement       (get) *
+	- ..../api/secure/achievement		(get)	*
+
+
 
 # TRAINING MAINTENANCE
-    - ..../api/secure/maintenance       (get) *
+
+	- ..../api/secure/maintenance		(get)	*

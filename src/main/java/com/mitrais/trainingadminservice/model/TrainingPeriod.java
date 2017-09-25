@@ -13,7 +13,7 @@
 package com.mitrais.trainingadminservice.model;
 
 import java.sql.Date;
-import java.sql.Time;
+import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -34,9 +34,9 @@ public class TrainingPeriod {
     private Date startDate;
     private Date endDate;
     private Long creatorId;
-    private Time createdAt;
+    private Timestamp createdAt;
     private Long updaterId;
-    private Time updatedAt;
+    private Timestamp updatedAt;
 
     public Long getTrainingPeriodId() {
         return trainingPeriodId;
@@ -94,19 +94,19 @@ public class TrainingPeriod {
         this.updaterId = updaterId;
     }
 
-    public Time getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Time createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Time getUpdatedAt() {
+    public Timestamp getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Time updatedAt) {
+    public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }
 }
