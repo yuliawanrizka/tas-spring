@@ -21,6 +21,7 @@ import java.sql.Date;
  * 
  */
 public class PeriodResponse {
+    private Long trainingPeriodId;
     private String trainingName;
     private boolean activeStatus;
     private int coursesCount;
@@ -28,6 +29,14 @@ public class PeriodResponse {
     private Date endDate;
     private String createdBy;
     private String editedBy;
+
+    public Long getTrainingPeriodId() {
+        return trainingPeriodId;
+    }
+
+    public void setTrainingPeriodId(Long trainingPeriodId) {
+        this.trainingPeriodId = trainingPeriodId;
+    }
 
     public String getTrainingName() {
         return trainingName;

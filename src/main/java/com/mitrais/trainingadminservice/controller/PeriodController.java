@@ -96,7 +96,8 @@ public class PeriodController {
     
     private PeriodResponse generateResultResponse(TrainingPeriod data){
         PeriodResponse result = new PeriodResponse();
-                
+        
+        result.setTrainingPeriodId(data.getTrainingPeriodId());
         result.setTrainingName(data.getTrainingName());
         result.setActiveStatus(data.isActive());
         result.setStartDate(data.getStartDate());
