@@ -43,38 +43,18 @@ public class PeriodController {
     @Autowired
     private UserRoleRepository userRoleRepository;
     
+    private HashMap<Long,String> adminList = new HashMap<>();
+    
     @GetMapping(value = "")
     public ResponseEntity getAllPeriod() {
         
         List<PeriodResponse> response = new ArrayList<>();
         
         List<TrainingPeriod> trainingPeriod = trainingPeriodRepository.findAll();
-        HashMap<Long,String> adminList = new HashMap<>();
         
         if(!(trainingPeriod.isEmpty())) {
             trainingPeriod.forEach( data -> {
-                PeriodResponse result = new PeriodResponse();
-                
-                result.setTrainingName(data.getTrainingName());
-                result.setActiveStatus(data.isActive());
-                result.setStartDate(data.getStartDate());
-                result.setEndDate(data.getEndDate());
-                
-                if(adminList.isEmpty() || !(adminList.containsKey(data.getCreatorId()))){
-                    adminList.put(data.getCreatorId(), getFullName(data.getCreatorId()));
-                }
-                result.setCreatedBy(adminList.get(data.getCreatorId()));
-                
-                if(data.getUpdaterId() != null ) {
-                    if(!(adminList.containsKey(data.getUpdaterId()))) {
-                        adminList.put(data.getUpdaterId(), getFullName(data.getUpdaterId()));
-                    }
-                result.setEditedBy(adminList.get(data.getUpdaterId()));
-                } else {
-                    result.setEditedBy("-");
-                }
-                
-                response.add(result);
+                response.add(generateResultResponse(data));
             });
             return ResponseEntity.ok(response);
         } else {
@@ -84,5 +64,29 @@ public class PeriodController {
     
     private String getFullName (Long id) {
         return employeeRepository.getOne(userRoleRepository.getOne(id).getEmployeeId()).getFullName();
+    }
+    
+    private PeriodResponse generateResultResponse(TrainingPeriod data){
+        PeriodResponse result = new PeriodResponse();
+                
+        result.setTrainingName(data.getTrainingName());
+        result.setActiveStatus(data.isActive());
+        result.setStartDate(data.getStartDate());
+        result.setEndDate(data.getEndDate());
+
+        if(adminList.isEmpty() || !(adminList.containsKey(data.getCreatorId()))){
+            adminList.put(data.getCreatorId(), getFullName(data.getCreatorId()));
+        }
+        result.setCreatedBy(adminList.get(data.getCreatorId()));
+
+        if(data.getUpdaterId() != null ) {
+            if(!(adminList.containsKey(data.getUpdaterId()))) {
+                adminList.put(data.getUpdaterId(), getFullName(data.getUpdaterId()));
+            }
+        result.setEditedBy(adminList.get(data.getUpdaterId()));
+        } else {
+            result.setEditedBy("-");
+        }
+        return result;
     }
 }
