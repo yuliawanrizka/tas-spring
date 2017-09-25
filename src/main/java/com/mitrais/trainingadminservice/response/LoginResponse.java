@@ -12,6 +12,8 @@
 
 package com.mitrais.trainingadminservice.response;
 
+import java.util.List;
+
 
 /**
  * Class Description
@@ -19,7 +21,7 @@ package com.mitrais.trainingadminservice.response;
  */
 public class LoginResponse {
     private String fullName;
-    private int[] role;
+    private List<Long> role;
     private String token;
 
     public String getFullName() {
@@ -30,11 +32,11 @@ public class LoginResponse {
         this.fullName = fullName;
     }
 
-    public int[] getRole() {
+    public List<Long> getRole() {
         return role;
     }
 
-    public void setRole(int[] role) {
+    public void setRole(List<Long> role) {
         this.role = role;
     }
 

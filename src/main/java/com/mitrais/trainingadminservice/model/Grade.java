@@ -26,21 +26,11 @@ import javax.persistence.OneToMany;
 @Entity
 public class Grade {
 
-    @OneToMany(mappedBy = "grade")
-    private List<Employee> employees;
     @Id
     @GeneratedValue
     private Long gradeId;
     private String jobFamily;
     private String grade;
-
-    public List<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
-    }
 
     public Long getGradeId() {
         return gradeId;

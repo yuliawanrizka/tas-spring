@@ -1,6 +1,6 @@
 package com.mitrais.trainingadminservice;
 
-import com.mitrais.trainingadminservice.controller.AuthenticationFilter;
+import com.mitrais.trainingadminservice.configuration.AuthenticationFilter;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

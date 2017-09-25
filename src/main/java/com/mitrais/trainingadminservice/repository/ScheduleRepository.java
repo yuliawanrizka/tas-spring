@@ -1,19 +1,18 @@
 /*
- * @(#) UserRoleRepository.java, v 1.0 2017/09/15 10:23:59
+ * @(#) ScheduleRepository.java, v 1.0 2017/09/19 14:27:06
  * 
  * Copyright (c) 2017, PT. Mitrais, Bali, Indonesia.
  * All rights reserved.
  * 
  * Revision History
  * 
- * 15-Sep-2017 Yuliawan Rizka Syafaat             [1.0]-Initial Coding
+ * 19-Sep-2017 Yuliawan Rizka Syafaat             [1.0]-Initial Coding
  * 
  */
 
 package com.mitrais.trainingadminservice.repository;
 
-import com.mitrais.trainingadminservice.model.UserRole;
-import java.util.List;
+import com.mitrais.trainingadminservice.model.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +22,6 @@ import org.springframework.stereotype.Component;
  * 
  */
 @Component
-public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
-    List<UserRole> findByEmployeeId(Long id);
+public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
+
 }
