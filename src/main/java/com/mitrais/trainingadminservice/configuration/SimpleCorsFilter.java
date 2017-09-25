@@ -41,10 +41,10 @@ public class SimpleCorsFilter implements Filter{
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse) res;
         HttpServletRequest request = (HttpServletRequest) req;
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-        response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "x-requested-with, authorization, charset, content-type");
+        response.setHeader("Access-Control-Allow-Origin", AppConstant.CORS_ALLOW_ORIGIN);
+        response.setHeader("Access-Control-Allow-Methods", AppConstant.CORS_ALLOW_METHODS);
+        response.setHeader("Access-Control-Max-Age", AppConstant.CORS_MAX_AGE);
+        response.setHeader("Access-Control-Allow-Headers", AppConstant.CORS_ALLOW_HEADERS);
 
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);

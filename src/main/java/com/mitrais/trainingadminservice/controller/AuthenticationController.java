@@ -12,15 +12,20 @@
 
 package com.mitrais.trainingadminservice.controller;
 
+import com.mitrais.trainingadminservice.configuration.AppConstant;
 import com.mitrais.trainingadminservice.model.Employee;
+import com.mitrais.trainingadminservice.model.UserRole;
 import com.mitrais.trainingadminservice.repository.EmployeeRepository;
+import com.mitrais.trainingadminservice.repository.UserRoleRepository;
 import com.mitrais.trainingadminservice.request.LoginRequest;
 import com.mitrais.trainingadminservice.response.LoginResponse;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.util.ArrayList;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,12 +46,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
     @Autowired
     private EmployeeRepository employeeRepository;
-    
-    //for implementaton, please change the key, also the key on AuthenticationFilter.java
-    private final String signatureKey = "3f0f203f52b2900e069f7865d9f256d3";
+    @Autowired
+    private UserRoleRepository userRoleRepository;
     
     @PostMapping(value = "")
-    public ResponseEntity functionName(@RequestBody final LoginRequest loginRequestBody) {
+    public ResponseEntity login(@RequestBody final LoginRequest loginRequestBody) {
         
         String jwtToken = "";
         int validTime;
@@ -69,17 +73,24 @@ public class AuthenticationController {
                 jwtToken = Jwts.builder().setSubject(username)
                             .claim("userId", employee.getEmployeeId())
                             .setExpiration(new Date(System.currentTimeMillis() + validTime))
-                            .signWith(SignatureAlgorithm.HS256, signatureKey)
+                            .signWith(SignatureAlgorithm.HS256, AppConstant.JWT_SIGNATURE_KEY)
                             .compact();
-
-                int role = 1;
+                
                 loginResponseBody.setFullName(employee.getFullName());
-                loginResponseBody.setRole(role);
+                loginResponseBody.setRole(getEmployeeRole(employee.getEmployeeId()));
                 loginResponseBody.setToken(jwtToken);
                 
                 return ResponseEntity.ok(loginResponseBody);
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or Password is incorrect");
             }
+    }
+    private List<Long> getEmployeeRole(Long id) {
+        List<UserRole> userRole = userRoleRepository.findByEmployeeId(id);
+        List<Long> x = new ArrayList<>();
+        userRole.forEach(role -> {
+            x.add(role.getRoleId());
+        });
+        return x;
     }
 }

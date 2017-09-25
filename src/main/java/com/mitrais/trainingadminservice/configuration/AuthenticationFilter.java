@@ -32,9 +32,6 @@ import org.springframework.web.filter.GenericFilterBean;
  */
 public class AuthenticationFilter extends GenericFilterBean{
     
-    //for implementaton, please change the key, also the key on AuthenticationController.java
-    private final String signatureKey = "3f0f203f52b2900e069f7865d9f256d3";
-    
     public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain)
             throws ServletException, IOException, ExpiredJwtException {
 
@@ -49,7 +46,7 @@ public class AuthenticationFilter extends GenericFilterBean{
 
         try {
             final Claims claims = Jwts.parser()
-                                    .setSigningKey(signatureKey)
+                                    .setSigningKey(AppConstant.JWT_SIGNATURE_KEY)
                                     .parseClaimsJws(token)
                                     .getBody();
             request.setAttribute("claims", claims);
