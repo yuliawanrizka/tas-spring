@@ -1,0 +1,26 @@
+# LOGIN
+    - ..../api/auth                     (post)
+        {
+            String  : username,
+            String  : password,
+            Boolean : rememberMe
+        }
+
+# DASHBOARD
+    - ..../api/secure/dashboard/active  (get) *
+    - ..../api/secure/dashboard/bcc     (get) *
+
+# PERIOD
+    - ..../api/secure/period            (get)
+
+# USER
+    - ..../api/secure/user              (get) *
+
+# ENROLLMENT
+    - ..../api/secure/enrollment        (get) *
+
+# ACHIEVEMENT
+    - ..../api/secure/achievement       (get) *
+
+# TRAINING MAINTENANCE
+    - ..../api/secure/maintenance       (get) *

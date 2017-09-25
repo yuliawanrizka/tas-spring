@@ -64,12 +64,13 @@ public class AuthenticationController {
         
             if (employee != null && checker.matches(password, employee.getPassword())) {
                 LoginResponse loginResponseBody = new LoginResponse();
-
+                
                 if (loginRequestBody.isRememberMe()) {
-                    validTime = 3 * 24 * 60 * 60 * 1000; // 3 days
+                    validTime = AppConstant.REMEMBER_ME_TRUE_VALID_TIME;
                 } else {
-                    validTime = 3 * 60 * 60 * 1000; // 3 hours
+                    validTime = AppConstant.REMEMBER_ME_FALSE_VALID_TIME;
                 }
+                
                 jwtToken = Jwts.builder().setSubject(username)
                             .claim("userId", employee.getEmployeeId())
                             .setExpiration(new Date(System.currentTimeMillis() + validTime))
