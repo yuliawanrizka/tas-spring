@@ -58,9 +58,9 @@ public class PeriodController {
     @GetMapping(value = "")
     public ResponseEntity getAllPeriod() {
         try{
-        List<PeriodResponse> response = new ArrayList<>();
-        
-        List<TrainingPeriod> trainingPeriod = trainingPeriodRepository.findAll();
+            List<PeriodResponse> response = new ArrayList<>();
+
+            List<TrainingPeriod> trainingPeriod = trainingPeriodRepository.findAll();
             trainingPeriod.forEach( data -> {
                 response.add(generateResultResponse(data));
             });
