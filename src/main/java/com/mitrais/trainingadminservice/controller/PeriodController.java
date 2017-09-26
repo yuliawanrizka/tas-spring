@@ -57,17 +57,16 @@ public class PeriodController {
     
     @GetMapping(value = "")
     public ResponseEntity getAllPeriod() {
-        
+        try{
         List<PeriodResponse> response = new ArrayList<>();
         
         List<TrainingPeriod> trainingPeriod = trainingPeriodRepository.findAll();
-        
-        if(!(trainingPeriod.isEmpty())) {
             trainingPeriod.forEach( data -> {
                 response.add(generateResultResponse(data));
             });
             return ResponseEntity.ok(response);
-        } else {
+        } catch (Exception e) {
+            System.out.println("ERROR at \"period/\": " + e);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
     }
@@ -88,12 +87,13 @@ public class PeriodController {
             trainingPeriodRepository.save(data);
             return ResponseEntity.status(HttpStatus.CREATED).body(true);
         } catch (Exception e) {
+            System.out.println("ERROR at \"period/create\": " + e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
     
     @GetMapping(value = "{id}")
-    public ResponseEntity findPeriod(@PathVariable final Long id) {
+    public ResponseEntity findPeriod(@PathVariable ("id") final Long id) {
         try {
             TrainingPeriod data = trainingPeriodRepository.findOne(id);
 
@@ -101,11 +101,12 @@ public class PeriodController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            System.out.println("ERROR at \"period/{id}\": " + e);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
     }
     @PostMapping(value = "{id}/edit")
-    public ResponseEntity editPeriod(@RequestBody final PeriodRequest request, @PathVariable final Long id, @RequestAttribute Claims claims) {
+    public ResponseEntity editPeriod(@RequestBody final PeriodRequest request, @PathVariable ("id") final Long id, @RequestAttribute Claims claims) {
         try {
             TrainingPeriod data = trainingPeriodRepository.findOne(id);
             
@@ -120,14 +121,20 @@ public class PeriodController {
             trainingPeriodRepository.save(data);
             return ResponseEntity.ok(true);
         } catch (Exception e){
+            System.out.println("ERROR at \"period/{id}/edit\": " + e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
     
     @GetMapping(value = "{id}/delete")
-    public ResponseEntity deletePeriod(@PathVariable final Long id) {
-        
-        return ResponseEntity.ok(null);
+    public ResponseEntity deletePeriod(@PathVariable ("id") final Long id) {
+        try {
+            trainingPeriodRepository.delete(id);
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            System.out.println("ERROR at \"period/{id}/delete\": " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
     }
     
     private String getFullName (Long id) {

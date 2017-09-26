@@ -42,7 +42,8 @@
 			openEnrollment	: boolean
 		}
 
-	- ..../api/secure/period/{id}/delete	(get)	*
+	- ..../api/secure/period/{id}/delete	(delete)
+
 # USER
 	- ..../api/secure/user			(get)	*
 

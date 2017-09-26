@@ -50,22 +50,22 @@ public class AuthenticationController {
     private UserRoleRepository userRoleRepository;
     
     @PostMapping(value = "")
-    public ResponseEntity login(@RequestBody final LoginRequest loginRequestBody) {
-        
+    public ResponseEntity login(@RequestBody final LoginRequest request) {
+        try{
         String jwtToken = "";
         int validTime;
         
         BCryptPasswordEncoder checker = new BCryptPasswordEncoder();
         
-        String username = loginRequestBody.getUsername();
-        String password = loginRequestBody.getPassword();
+        String username = request.getUsername();
+        String password = request.getPassword();
         
         Employee employee = employeeRepository.findByAccountName("mitrais\\" + username);
         
-            if (employee != null && checker.matches(password, employee.getPassword())) {
-                LoginResponse loginResponseBody = new LoginResponse();
+            if (checker.matches(password, employee.getPassword())) {
+                LoginResponse response = new LoginResponse();
                 
-                if (loginRequestBody.isRememberMe()) {
+                if (request.isRememberMe()) {
                     validTime = AppConstant.REMEMBER_ME_TRUE_VALID_TIME;
                 } else {
                     validTime = AppConstant.REMEMBER_ME_FALSE_VALID_TIME;
@@ -77,14 +77,18 @@ public class AuthenticationController {
                             .signWith(SignatureAlgorithm.HS256, AppConstant.JWT_SIGNATURE_KEY)
                             .compact();
                 
-                loginResponseBody.setFullName(employee.getFullName());
-                loginResponseBody.setRole(getEmployeeRole(employee.getEmployeeId()));
-                loginResponseBody.setToken(jwtToken);
+                response.setFullName(employee.getFullName());
+                response.setRole(getEmployeeRole(employee.getEmployeeId()));
+                response.setToken(jwtToken);
                 
-                return ResponseEntity.ok(loginResponseBody);
+                return ResponseEntity.ok(response);
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or Password is incorrect");
             }
+        } catch (Exception e) {
+            System.out.println("ERROR at \"auth/\": " + e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or Password is incorrect");
+        }
     }
     private List<Long> getEmployeeRole(Long id) {
         List<UserRole> userRole = userRoleRepository.findByEmployeeId(id);
