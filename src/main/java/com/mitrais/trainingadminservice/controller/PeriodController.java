@@ -16,7 +16,7 @@ import com.mitrais.trainingadminservice.model.TrainingPeriod;
 import com.mitrais.trainingadminservice.repository.EmployeeRepository;
 import com.mitrais.trainingadminservice.repository.TrainingPeriodRepository;
 import com.mitrais.trainingadminservice.repository.UserRoleRepository;
-import com.mitrais.trainingadminservice.request.AddPeriodRequest;
+import com.mitrais.trainingadminservice.request.PeriodRequest;
 import com.mitrais.trainingadminservice.response.PeriodResponse;
 import io.jsonwebtoken.Claims;
 import java.sql.Timestamp;
@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,8 +46,10 @@ public class PeriodController {
     
     @Autowired
     private TrainingPeriodRepository trainingPeriodRepository;
+    
     @Autowired
     private EmployeeRepository employeeRepository;
+    
     @Autowired
     private UserRoleRepository userRoleRepository;
     
@@ -70,24 +73,61 @@ public class PeriodController {
     }
     
     @PostMapping(value = "create")
-    public ResponseEntity addPeriod(@RequestBody final AddPeriodRequest addPeriod, @RequestAttribute Claims claims) {
+    public ResponseEntity addPeriod(@RequestBody final PeriodRequest request, @RequestAttribute Claims claims) {
         try {
-            TrainingPeriod addData = new TrainingPeriod();
+            TrainingPeriod data = new TrainingPeriod();
 
-            addData.setTrainingName(addPeriod.getTrainingName());
-            addData.setActive(true);
-            addData.setStartDate(addPeriod.getStartDate());
-            addData.setEndDate(addPeriod.getEndDate());
-            addData.setCreatorId(new Long(claims.get("userId").toString()));
-            addData.setCreatedAt(new Timestamp(Calendar.getInstance().getTime().getTime()));
+            data.setTrainingName(request.getTrainingName());
+            data.setActive(true);
+            data.setStartDate(request.getStartDate());
+            data.setEndDate(request.getEndDate());
+            data.setCreatorId(new Long(claims.get("userId").toString()));
+            data.setCreatedAt(new Timestamp(Calendar.getInstance().getTime().getTime()));
+            data.setOpenEnrollment(request.isOpenEnrollment());
 
-            trainingPeriodRepository.save(addData);
+            trainingPeriodRepository.save(data);
             return ResponseEntity.status(HttpStatus.CREATED).body(true);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
+    }
+    
+    @GetMapping(value = "{id}")
+    public ResponseEntity findPeriod(@PathVariable final Long id) {
+        try {
+            TrainingPeriod data = trainingPeriodRepository.findOne(id);
+
+            PeriodResponse response = generateResultResponse(data);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+    }
+    @PostMapping(value = "{id}/edit")
+    public ResponseEntity editPeriod(@RequestBody final PeriodRequest request, @PathVariable final Long id, @RequestAttribute Claims claims) {
+        try {
+            TrainingPeriod data = trainingPeriodRepository.findOne(id);
+            
+            data.setTrainingName(request.getTrainingName());
+            data.setActive(request.isActive());
+            data.setStartDate(request.getStartDate());
+            data.setEndDate(request.getEndDate());
+            data.setUpdaterId(new Long(claims.get("userId").toString()));
+            data.setUpdatedAt(new Timestamp(Calendar.getInstance().getTime().getTime()));
+            data.setOpenEnrollment(request.isOpenEnrollment());
+            
+            trainingPeriodRepository.save(data);
+            return ResponseEntity.ok(true);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
+    }
+    
+    @GetMapping(value = "{id}/delete")
+    public ResponseEntity deletePeriod(@PathVariable final Long id) {
         
-        
+        return ResponseEntity.ok(null);
     }
     
     private String getFullName (Long id) {

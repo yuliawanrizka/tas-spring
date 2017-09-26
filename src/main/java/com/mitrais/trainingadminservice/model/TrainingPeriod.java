@@ -37,6 +37,7 @@ public class TrainingPeriod {
     private Timestamp createdAt;
     private Long updaterId;
     private Timestamp updatedAt;
+    private boolean openEnrollment;
 
     public Long getTrainingPeriodId() {
         return trainingPeriodId;
@@ -108,5 +109,13 @@ public class TrainingPeriod {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public boolean isOpenEnrollment() {
+        return openEnrollment;
+    }
+
+    public void setOpenEnrollment(boolean openEnrollment) {
+        this.openEnrollment = openEnrollment;
     }
 }

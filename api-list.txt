@@ -32,8 +32,16 @@
 			openEnrollment	: boolean
 		}
 
-	- ..../api/secure/period/{id}		(get)	*
-	- ..../api/secure/period/{id}/edit	(post)	*
+	- ..../api/secure/period/{id}		(get)
+	- ..../api/secure/period/{id}/edit	(post)
+		{
+			trainingName	: String,
+			active		: boolean,
+			startDate	: Date,
+			endDate		: Date,
+			openEnrollment	: boolean
+		}
+
 	- ..../api/secure/period/{id}/delete	(get)	*
 # USER
 	- ..../api/secure/user			(get)	*
