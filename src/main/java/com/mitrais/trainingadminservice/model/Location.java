@@ -27,7 +27,7 @@ public class Location {
     @Id
     @GeneratedValue
     private Long locationId;
-    private Long location;
+    private String  location;
 
     public Long getLocationId() {
         return locationId;
@@ -37,11 +37,11 @@ public class Location {
         this.locationId = locationId;
     }
 
-    public Long getLocation() {
+    public String getLocation() {
         return location;
     }
 
-    public void setLocation(Long location) {
+    public void setLocation(String location) {
         this.location = location;
     }
 }

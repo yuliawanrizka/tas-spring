@@ -45,13 +45,22 @@
 	- ..../api/secure/period/{idPeriod}/delete		(delete)
 	- ..../api/secure/period/{idPeriod}/eligible		(get)
 	- ..../api/secure/period/{idPeriod}/eligible/add	(post)
-		{
-			employeeId	: number
-		}
+		[
+			{
+				employeeId	: number
+			},
+			{
+				employeeId	: number
+			}
+		]
 	- ..../api/secure/period/{idPeriod}/eligible/delete	(delete)
 		{
 			employeeId	: number
 		}
+	- ..../api/secure/period/{idPeriod}/course		(get)
+	- ..../api/secure/period/{idPeriod}/course/add		(post)	*
+	- ..../api/secure/period/course/			(get)	*
+	- ..../api/secure/period/course/add			(post)	*
 
 # USER
 	- ..../api/secure/user					(get)

@@ -33,6 +33,7 @@ public class CoursePeriod {
     private Long mainTrainer;
     private Long backupTrainer;
     private Long classroomId;
+    private int capacity;
     private Long creatorId;
     private Timestamp createdAt;
     private Long updaterId;
@@ -126,4 +127,13 @@ public class CoursePeriod {
     public void setOnlineClass(boolean onlineClass) {
         this.onlineClass = onlineClass;
     }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+    
 }

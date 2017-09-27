@@ -12,15 +12,21 @@
 
 package com.mitrais.trainingadminservice.controller;
 
+import com.mitrais.trainingadminservice.model.CoursePeriod;
 import com.mitrais.trainingadminservice.model.EligibleParticipants;
 import com.mitrais.trainingadminservice.model.TrainingPeriod;
 import com.mitrais.trainingadminservice.model.UserRole;
+import com.mitrais.trainingadminservice.repository.ClassroomRepository;
+import com.mitrais.trainingadminservice.repository.CoursePeriodRepository;
+import com.mitrais.trainingadminservice.repository.CourseRepository;
 import com.mitrais.trainingadminservice.repository.EligibleParticipantsRepository;
 import com.mitrais.trainingadminservice.repository.EmployeeRepository;
+import com.mitrais.trainingadminservice.repository.LocationRepository;
 import com.mitrais.trainingadminservice.repository.TrainingPeriodRepository;
 import com.mitrais.trainingadminservice.repository.UserRoleRepository;
 import com.mitrais.trainingadminservice.request.EligibleRequest;
 import com.mitrais.trainingadminservice.request.PeriodRequest;
+import com.mitrais.trainingadminservice.response.CoursePeriodResponse;
 import com.mitrais.trainingadminservice.response.EligibleResponse;
 import com.mitrais.trainingadminservice.response.PeriodResponse;
 import io.jsonwebtoken.Claims;
@@ -63,7 +69,22 @@ public class PeriodController {
     @Autowired
     private EligibleParticipantsRepository eligibleParticipantsRepository;
     
-    private HashMap<Long,String> adminList = new HashMap<>();
+    @Autowired
+    private CoursePeriodRepository coursePeriodRepository;
+    
+    @Autowired
+    private CourseRepository courseRepository;
+    
+    @Autowired
+    private ClassroomRepository classroomRepository;
+    
+    @Autowired
+    private LocationRepository locationRepository;
+    
+    private HashMap<Long,String> employeeNameList = new HashMap<>();
+    private HashMap<Long,String> classroomList = new HashMap<>();
+    private HashMap<Long,String> locationList = new HashMap<>();
+    private HashMap<Long,String> courseList = new HashMap<>();
     
     @GetMapping(value = "")
     public ResponseEntity getAllPeriod() {
@@ -72,7 +93,7 @@ public class PeriodController {
 
             List<TrainingPeriod> trainingPeriod = trainingPeriodRepository.findAll();
             trainingPeriod.forEach( data -> {
-                response.add(generateResultResponse(data));
+                response.add(generatePeriodResponse(data));
             });
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -103,7 +124,7 @@ public class PeriodController {
         try {
             TrainingPeriod data = trainingPeriodRepository.findOne(id);
 
-            PeriodResponse response = generateResultResponse(data);
+            PeriodResponse response = generatePeriodResponse(data);
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -156,9 +177,11 @@ public class PeriodController {
     }
     
     @PostMapping(value = "{id}/eligible/add")
-    public ResponseEntity addEligible(@RequestBody final EligibleRequest request, @PathVariable("id") final Long id ) {
+    public ResponseEntity addEligible(@RequestBody final List<EligibleRequest> request, @PathVariable("id") final Long id ) {
         try {
-            addEligibleUser(request, id);
+            request.forEach(x -> {
+                addEligibleUser(x, id);
+            });
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             System.out.println("ERROR at \"api/secure/period/" + id + "/eligible/add\": " + e);
@@ -176,6 +199,16 @@ public class PeriodController {
         }
     }
     
+    @GetMapping(value = "{id}/course")
+    public ResponseEntity getAllCourse(@PathVariable("id") final Long id) {
+        List<CoursePeriod> scheduleList = coursePeriodRepository.findByTrainingPeriodId(id);
+        List<CoursePeriodResponse> response = new ArrayList<>();
+        scheduleList.forEach(data -> {
+            response.add(generateCoursePeriodResponse(data));
+        });
+        return ResponseEntity.ok(response);
+    }
+    
     private Long getEmployeeId (Long id) {
         return userRoleRepository.getOne(id).getEmployeeId();
     }
@@ -184,7 +217,43 @@ public class PeriodController {
         return employeeRepository.getOne(userRoleRepository.getOne(id).getEmployeeId()).getFullName();
     }
     
-    private PeriodResponse generateResultResponse(TrainingPeriod data){
+    private CoursePeriodResponse generateCoursePeriodResponse (CoursePeriod data) {
+        CoursePeriodResponse result = new CoursePeriodResponse();
+        
+        result.setCoursePeriodId(data.getCoursePeriodId());
+        
+        if(courseList.isEmpty() || !(courseList.containsKey(data.getCourseId()))){
+            courseList.put(data.getCourseId(), courseRepository.findOne(data.getCourseId()).getCourseName());
+        }
+        result.setCourseName(courseList.get(data.getCourseId()));
+        
+        if(employeeNameList.isEmpty() || !(employeeNameList.containsKey(data.getMainTrainer()))){
+            employeeNameList.put(data.getMainTrainer(), getEmployeeFullName(data.getMainTrainer()));
+        }
+        result.setMainTrainer(employeeNameList.get(data.getMainTrainer()));
+
+        if(data.getBackupTrainer()!= null ) {
+            if(!(employeeNameList.containsKey(data.getBackupTrainer()))) {
+                employeeNameList.put(data.getBackupTrainer(), getEmployeeFullName(data.getBackupTrainer()));
+            }
+            result.setBackupTrainer(employeeNameList.get(data.getBackupTrainer()));
+        } else {
+            result.setBackupTrainer("-");
+        }
+        
+        if (classroomList.isEmpty() || !(classroomList.containsKey(data.getClassroomId()))) {
+            classroomList.put(data.getClassroomId(),classroomRepository.findOne(data.getClassroomId()).getClassroom());
+        }
+        if (locationList.isEmpty() || !(locationList.containsKey(data.getClassroomId()))) {
+            locationList.put(data.getClassroomId(), locationRepository.findOne(classroomRepository.findOne(data.getClassroomId()).getLocationId()).getLocation());
+        }
+        result.setClassroom(classroomList.get(data.getClassroomId())+ ", " + locationList.get(data.getClassroomId()));
+        result.setCapacity(data.getCapacity());
+        
+        return result;
+    }
+    
+    private PeriodResponse generatePeriodResponse(TrainingPeriod data){
         PeriodResponse result = new PeriodResponse();
         
         result.setTrainingPeriodId(data.getTrainingPeriodId());
@@ -194,16 +263,16 @@ public class PeriodController {
         result.setStartDate(data.getStartDate());
         result.setEndDate(data.getEndDate());
 
-        if(adminList.isEmpty() || !(adminList.containsKey(data.getCreatorId()))){
-            adminList.put(data.getCreatorId(), getEmployeeFullName(data.getCreatorId()));
+        if(employeeNameList.isEmpty() || !(employeeNameList.containsKey(data.getCreatorId()))){
+            employeeNameList.put(data.getCreatorId(), getEmployeeFullName(data.getCreatorId()));
         }
-        result.setCreatedBy(adminList.get(data.getCreatorId()));
+        result.setCreatedBy(employeeNameList.get(data.getCreatorId()));
 
         if(data.getUpdaterId() != null ) {
-            if(!(adminList.containsKey(data.getUpdaterId()))) {
-                adminList.put(data.getUpdaterId(), getEmployeeFullName(data.getUpdaterId()));
+            if(!(employeeNameList.containsKey(data.getUpdaterId()))) {
+                employeeNameList.put(data.getUpdaterId(), getEmployeeFullName(data.getUpdaterId()));
             }
-        result.setEditedBy(adminList.get(data.getUpdaterId()));
+        result.setEditedBy(employeeNameList.get(data.getUpdaterId()));
         } else {
             result.setEditedBy("-");
         }
@@ -247,7 +316,6 @@ public class PeriodController {
                         eligibleParticipantsRepository.delete(y.getEligibleParticipantsId());
                     }
                 });
-                
             }
         });
     }
