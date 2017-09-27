@@ -1,5 +1,5 @@
 # LOGIN
-	- ..../api/auth				(post)
+	- ..../api/auth					(post)
 		{
 
 			username	: String,
@@ -15,16 +15,16 @@
 
 # DASHBOARD
 
-	- ..../api/secure/dashboard/active	(get)	*
-	- ..../api/secure/dashboard/bcc		(get)	*
+	- ..../api/secure/dashboard/active		(get)	*
+	- ..../api/secure/dashboard/bcc			(get)	*
 
 
 
 # PERIOD
 
-	- ..../api/secure/period		(get)
+	- ..../api/secure/period			(get)
 
-	- ..../api/secure/period/create		(post)
+	- ..../api/secure/period/create			(post)
 		{
 			trainingName	: String,
 			startDate	: Date,
@@ -32,8 +32,8 @@
 			openEnrollment	: boolean
 		}
 
-	- ..../api/secure/period/{id}		(get)
-	- ..../api/secure/period/{id}/edit	(post)
+	- ..../api/secure/period/{id}			(get)
+	- ..../api/secure/period/{id}/edit		(post)
 		{
 			trainingName	: String,
 			active		: boolean,
@@ -42,23 +42,28 @@
 			openEnrollment	: boolean
 		}
 
-	- ..../api/secure/period/{id}/delete	(delete)
+	- ..../api/secure/period/{id}/delete		(delete)
+	- ..../api/secure/period/{id}/eligible		(get)
+	- ..../api/secure/period/{id}/eligible/add	(post)
+		{
+			employeeId	: number
+		}
 
 # USER
-	- ..../api/secure/user			(get)	*
-
+	- ..../api/secure/user				(get)	*
+	- ..../api/secure/user/eligible			(get)
 
 
 # ENROLLMENT
-	- ..../api/secure/enrollment		(get)	*
+	- ..../api/secure/enrollment			(get)	*
 
 
 
 # ACHIEVEMENT
-	- ..../api/secure/achievement		(get)	*
+	- ..../api/secure/achievement			(get)	*
 
 
 
 # TRAINING MAINTENANCE
 
-	- ..../api/secure/maintenance		(get)	*
+	- ..../api/secure/maintenance			(get)	*

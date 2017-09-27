@@ -12,11 +12,16 @@
 
 package com.mitrais.trainingadminservice.controller;
 
+import com.mitrais.trainingadminservice.model.EligibleParticipants;
 import com.mitrais.trainingadminservice.model.TrainingPeriod;
+import com.mitrais.trainingadminservice.model.UserRole;
+import com.mitrais.trainingadminservice.repository.EligibleParticipantsRepository;
 import com.mitrais.trainingadminservice.repository.EmployeeRepository;
 import com.mitrais.trainingadminservice.repository.TrainingPeriodRepository;
 import com.mitrais.trainingadminservice.repository.UserRoleRepository;
+import com.mitrais.trainingadminservice.request.EligibleRequest;
 import com.mitrais.trainingadminservice.request.PeriodRequest;
+import com.mitrais.trainingadminservice.response.EligibleResponse;
 import com.mitrais.trainingadminservice.response.PeriodResponse;
 import io.jsonwebtoken.Claims;
 import java.sql.Timestamp;
@@ -27,6 +32,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,6 +59,9 @@ public class PeriodController {
     @Autowired
     private UserRoleRepository userRoleRepository;
     
+    @Autowired
+    private EligibleParticipantsRepository eligibleParticipantsRepository;
+    
     private HashMap<Long,String> adminList = new HashMap<>();
     
     @GetMapping(value = "")
@@ -66,7 +75,7 @@ public class PeriodController {
             });
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            System.out.println("ERROR at \"period/\": " + e);
+            System.out.println("ERROR at \"api/secure/period/\": " + e);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
     }
@@ -75,19 +84,15 @@ public class PeriodController {
     public ResponseEntity addPeriod(@RequestBody final PeriodRequest request, @RequestAttribute Claims claims) {
         try {
             TrainingPeriod data = new TrainingPeriod();
+            
+            TrainingPeriod dataInserted = dataInsertion(data, request);
+            dataInserted.setCreatorId(new Long(claims.get("userId").toString()));
+            dataInserted.setCreatedAt(new Timestamp(Calendar.getInstance().getTime().getTime()));
 
-            data.setTrainingName(request.getTrainingName());
-            data.setActive(true);
-            data.setStartDate(request.getStartDate());
-            data.setEndDate(request.getEndDate());
-            data.setCreatorId(new Long(claims.get("userId").toString()));
-            data.setCreatedAt(new Timestamp(Calendar.getInstance().getTime().getTime()));
-            data.setOpenEnrollment(request.isOpenEnrollment());
-
-            trainingPeriodRepository.save(data);
+            trainingPeriodRepository.save(dataInserted);
             return ResponseEntity.status(HttpStatus.CREATED).body(true);
         } catch (Exception e) {
-            System.out.println("ERROR at \"period/create\": " + e);
+            System.out.println("ERROR at \"api/secure/period/create\": " + e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
@@ -101,7 +106,7 @@ public class PeriodController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            System.out.println("ERROR at \"period/{id}\": " + e);
+            System.out.println("ERROR at \"api/secure/period/" + id + "\": " + e);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
     }
@@ -110,29 +115,52 @@ public class PeriodController {
         try {
             TrainingPeriod data = trainingPeriodRepository.findOne(id);
             
-            data.setTrainingName(request.getTrainingName());
-            data.setActive(request.isActive());
-            data.setStartDate(request.getStartDate());
-            data.setEndDate(request.getEndDate());
-            data.setUpdaterId(new Long(claims.get("userId").toString()));
-            data.setUpdatedAt(new Timestamp(Calendar.getInstance().getTime().getTime()));
-            data.setOpenEnrollment(request.isOpenEnrollment());
+            TrainingPeriod dataInserted = dataInsertion(data, request);
+            dataInserted.setUpdaterId(new Long(claims.get("userId").toString()));
+            dataInserted.setUpdatedAt(new Timestamp(Calendar.getInstance().getTime().getTime()));
             
-            trainingPeriodRepository.save(data);
+            trainingPeriodRepository.save(dataInserted);
             return ResponseEntity.ok(true);
         } catch (Exception e){
-            System.out.println("ERROR at \"period/{id}/edit\": " + e);
+            System.out.println("ERROR at \"api/secure/period/" + id + "/edit\": " + e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
     
-    @GetMapping(value = "{id}/delete")
+    @DeleteMapping(value = "{id}/delete")
     public ResponseEntity deletePeriod(@PathVariable ("id") final Long id) {
         try {
             trainingPeriodRepository.delete(id);
             return ResponseEntity.ok(true);
         } catch (Exception e) {
-            System.out.println("ERROR at \"period/{id}/delete\": " + e);
+            System.out.println("ERROR at \"api/secure/period/" + id + "/delete\": " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
+    }
+    
+    @GetMapping(value = "{id}/eligible")
+    public ResponseEntity getEligibleParticipants(@PathVariable("id") final Long id) {
+        try{
+            List<EligibleResponse> response = new ArrayList<>();
+            List<EligibleParticipants> data = eligibleParticipantsRepository.findByTrainingPeriodId(id);
+            data.forEach(x -> {
+                response.add(new EligibleResponse(getFullName(x.getUserRoleId())));
+            });
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.out.println("ERROR at \"api/secure/period/" + id + "/eligible\": " + e);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+        
+    }
+    
+    @PostMapping(value = "{id}/eligible/add")
+    public ResponseEntity addEligible(@RequestBody final EligibleRequest request, @PathVariable("id") final Long id ) {
+        try {
+            addEligibleUser(request, id);
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            System.out.println("ERROR at \"api/secure/period/" + id + "/eligible/add\": " + e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
@@ -147,6 +175,7 @@ public class PeriodController {
         result.setTrainingPeriodId(data.getTrainingPeriodId());
         result.setTrainingName(data.getTrainingName());
         result.setActiveStatus(data.isActive());
+        result.setCoursesCount(0);
         result.setStartDate(data.getStartDate());
         result.setEndDate(data.getEndDate());
 
@@ -163,6 +192,27 @@ public class PeriodController {
         } else {
             result.setEditedBy("-");
         }
+        result.setOpenEnrollment(data.isOpenEnrollment());
         return result;
+    }
+    private TrainingPeriod dataInsertion(TrainingPeriod data, PeriodRequest source) {
+        data.setTrainingName(source.getTrainingName());
+        data.setActive(source.isActive());
+        data.setStartDate(source.getStartDate());
+        data.setEndDate(source.getEndDate());
+        data.setOpenEnrollment(source.isOpenEnrollment());
+        return data;
+    }
+    
+    private void addEligibleUser(EligibleRequest data, Long id) {
+        List<UserRole> role = userRoleRepository.findByEmployeeId(data.getEmployeeId());
+        EligibleParticipants request = new EligibleParticipants();
+        role.forEach(x -> {
+            if(x.getRoleId() == 4) {
+                request.setUserRoleId(x.getUserRoleId());
+                request.setTrainingPeriodId(id);
+                eligibleParticipantsRepository.save(request);
+            }
+        });
     }
 }
