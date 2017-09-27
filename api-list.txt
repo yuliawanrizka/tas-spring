@@ -1,5 +1,5 @@
 # LOGIN
-	- ..../api/auth						(post)
+	- ..../api/auth								(post)
 		{
 
 			username	: String,
@@ -15,16 +15,16 @@
 
 # DASHBOARD
 
-	- ..../api/secure/dashboard/active			(get)	*
-	- ..../api/secure/dashboard/bcc				(get)	*
+	- ..../api/secure/dashboard/active					(get)	*
+	- ..../api/secure/dashboard/bcc						(get)	*
 
 
 
 # PERIOD
 
-	- ..../api/secure/period				(get)
+	- ..../api/secure/period						(get)
 
-	- ..../api/secure/period/create				(post)
+	- ..../api/secure/period/create						(post)
 		{
 			trainingName	: String,
 			startDate	: Date,
@@ -32,8 +32,8 @@
 			openEnrollment	: boolean
 		}
 
-	- ..../api/secure/period/{idPeriod}			(get)
-	- ..../api/secure/period/{idPeriod}/edit		(post)
+	- ..../api/secure/period/{idPeriod}					(get)
+	- ..../api/secure/period/{idPeriod}/edit				(post)
 		{
 			trainingName	: String,
 			active		: boolean,
@@ -42,9 +42,9 @@
 			openEnrollment	: boolean
 		}
 
-	- ..../api/secure/period/{idPeriod}/delete		(delete)
-	- ..../api/secure/period/{idPeriod}/eligible		(get)
-	- ..../api/secure/period/{idPeriod}/eligible/add	(post)
+	- ..../api/secure/period/{idPeriod}/delete				(delete)
+	- ..../api/secure/period/{idPeriod}/eligible				(get)
+	- ..../api/secure/period/{idPeriod}/eligible/add			(post)
 		[
 			{
 				employeeId	: number
@@ -53,30 +53,28 @@
 				employeeId	: number
 			}
 		]
-	- ..../api/secure/period/{idPeriod}/eligible/delete	(delete)
-		{
-			employeeId	: number
-		}
-	- ..../api/secure/period/{idPeriod}/course		(get)
-	- ..../api/secure/period/{idPeriod}/course/add		(post)	*
-	- ..../api/secure/period/course/			(get)	*
-	- ..../api/secure/period/course/add			(post)	*
+	- ..../api/secure/period/{idPeriod}/eligible/{idEmployee}/delete	(delete)
+	- ..../api/secure/period/{idPeriod}/course				(get)
+	- ..../api/secure/period/{idPeriod}/course/add				(post)	*
+	- ..../api/secure/period/{idPeriod}/course/delete			(post)	*
+	- ..../api/secure/period/course/					(get)	*
+	- ..../api/secure/period/course/add					(post)	*
 
 # USER
-	- ..../api/secure/user					(get)
-	- ..../api/secure/user/eligible/{idPeriod}		(get)
+	- ..../api/secure/user							(get)
+	- ..../api/secure/user/eligible/{idPeriod}				(get)
 
 
 # ENROLLMENT
-	- ..../api/secure/enrollment				(get)	*
+	- ..../api/secure/enrollment						(get)	*
 
 
 
 # ACHIEVEMENT
-	- ..../api/secure/achievement				(get)	*
+	- ..../api/secure/achievement						(get)	*
 
 
 
 # TRAINING MAINTENANCE
 
-	- ..../api/secure/maintenance				(get)	*
+	- ..../api/secure/maintenance						(get)	*

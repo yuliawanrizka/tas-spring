@@ -169,7 +169,7 @@ public class PeriodController {
                 throw new NullPointerException();
             }
             data.forEach(x -> {
-                response.add(new EligibleResponse(getEmployeeId(id), getEmployeeFullName(x.getUserRoleId())));
+                response.add(new EligibleResponse(getEmployeeId(x.getUserRoleId()), getEmployeeFullName(x.getUserRoleId())));
             });
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -180,7 +180,7 @@ public class PeriodController {
     }
     
     @PostMapping(value = "{id}/eligible/add")
-    public ResponseEntity addEligible(@RequestBody final List<EligibleRequest> request, @PathVariable("id") final Long id ) {
+    public ResponseEntity addEligibleParticipants(@RequestBody final List<EligibleRequest> request, @PathVariable("id") final Long id ) {
         try {
             request.forEach(x -> {
                 addEligibleUser(x, id);
@@ -191,10 +191,10 @@ public class PeriodController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
-    @DeleteMapping(value = "{id}/eligible/delete")
-    public ResponseEntity functionName(@RequestBody final EligibleRequest request, @PathVariable("id") final Long id) {
+    @DeleteMapping(value = "{id}/eligible/{idUser}/delete")
+    public ResponseEntity deleteEligibleParticipants(@PathVariable("id") final Long id, @PathVariable("idUser") final Long idUser) {
         try {
-            deleteEligibleUser(request, id);
+            deleteEligibleUser(idUser, id);
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             System.out.println("ERROR at \"api/secure/period/" + id + "/eligible/add\": " + e);
@@ -317,8 +317,8 @@ public class PeriodController {
         });
     }
     
-    private void deleteEligibleUser (EligibleRequest data, Long id) {
-        List<UserRole> role = userRoleRepository.findByEmployeeId(data.getEmployeeId());
+    private void deleteEligibleUser (Long data, Long id) {
+        List<UserRole> role = userRoleRepository.findByEmployeeId(data);
         role.forEach(x -> {
             if(x.getRoleId() == 4) {
                 List <EligibleParticipants> eligible = eligibleParticipantsRepository.findByUserRoleId(x.getUserRoleId());
