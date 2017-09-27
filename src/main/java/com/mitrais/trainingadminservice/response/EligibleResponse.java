@@ -19,10 +19,20 @@ package com.mitrais.trainingadminservice.response;
  */
 public class EligibleResponse {
 
+    private Long id;
     private String fullName;
 
-    public EligibleResponse(String fullName) {
+    public EligibleResponse (Long id, String fullName) {
         this.fullName = fullName;
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getFullName() {

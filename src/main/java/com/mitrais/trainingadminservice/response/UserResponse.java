@@ -12,6 +12,8 @@
 
 package com.mitrais.trainingadminservice.response;
 
+import java.util.List;
+
 
 /**
  * Class Description
@@ -25,6 +27,8 @@ public class UserResponse {
     private String grade;
     private String email;
     private String accountName;
+    private boolean active;
+    private List<Long> role ;
 
     public Long getEmployeeId() {
         return employeeId;
@@ -73,4 +77,21 @@ public class UserResponse {
     public void setAccountName(String accountName) {
         this.accountName = accountName;
     }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public List<Long> getRole() {
+        return role;
+    }
+
+    public void setRole(List<Long> role) {
+        this.role = role;
+    }
+    
 }

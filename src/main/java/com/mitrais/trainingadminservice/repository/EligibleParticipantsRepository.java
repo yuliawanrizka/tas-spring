@@ -25,4 +25,5 @@ import org.springframework.stereotype.Component;
 @Component
 public interface EligibleParticipantsRepository extends JpaRepository<EligibleParticipants, Long> {
     List<EligibleParticipants> findByTrainingPeriodId (Long trainingPeriodId);
+    List<EligibleParticipants> findByUserRoleId (Long userRoleId);
 }

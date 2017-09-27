@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -144,7 +145,7 @@ public class PeriodController {
             List<EligibleResponse> response = new ArrayList<>();
             List<EligibleParticipants> data = eligibleParticipantsRepository.findByTrainingPeriodId(id);
             data.forEach(x -> {
-                response.add(new EligibleResponse(getFullName(x.getUserRoleId())));
+                response.add(new EligibleResponse(getEmployeeId(id), getEmployeeFullName(x.getUserRoleId())));
             });
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -164,8 +165,22 @@ public class PeriodController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
+    @DeleteMapping(value = "{id}/eligible/delete")
+    public ResponseEntity functionName(@RequestBody final EligibleRequest request, @PathVariable("id") final Long id) {
+        try {
+            deleteEligibleUser(request, id);
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            System.out.println("ERROR at \"api/secure/period/" + id + "/eligible/add\": " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
+    }
     
-    private String getFullName (Long id) {
+    private Long getEmployeeId (Long id) {
+        return userRoleRepository.getOne(id).getEmployeeId();
+    }
+    
+    private String getEmployeeFullName (Long id) {
         return employeeRepository.getOne(userRoleRepository.getOne(id).getEmployeeId()).getFullName();
     }
     
@@ -180,13 +195,13 @@ public class PeriodController {
         result.setEndDate(data.getEndDate());
 
         if(adminList.isEmpty() || !(adminList.containsKey(data.getCreatorId()))){
-            adminList.put(data.getCreatorId(), getFullName(data.getCreatorId()));
+            adminList.put(data.getCreatorId(), getEmployeeFullName(data.getCreatorId()));
         }
         result.setCreatedBy(adminList.get(data.getCreatorId()));
 
         if(data.getUpdaterId() != null ) {
             if(!(adminList.containsKey(data.getUpdaterId()))) {
-                adminList.put(data.getUpdaterId(), getFullName(data.getUpdaterId()));
+                adminList.put(data.getUpdaterId(), getEmployeeFullName(data.getUpdaterId()));
             }
         result.setEditedBy(adminList.get(data.getUpdaterId()));
         } else {
@@ -209,9 +224,30 @@ public class PeriodController {
         EligibleParticipants request = new EligibleParticipants();
         role.forEach(x -> {
             if(x.getRoleId() == 4) {
+                List <EligibleParticipants> eligible = eligibleParticipantsRepository.findByUserRoleId(x.getUserRoleId());
+                eligible.forEach(y -> {
+                    if(Objects.equals(y.getTrainingPeriodId(), id)) {
+                        throw new IllegalArgumentException("The Employee is already enrolled.");
+                    }
+                });
                 request.setUserRoleId(x.getUserRoleId());
                 request.setTrainingPeriodId(id);
                 eligibleParticipantsRepository.save(request);
+            }
+        });
+    }
+    
+    private void deleteEligibleUser (EligibleRequest data, Long id) {
+        List<UserRole> role = userRoleRepository.findByEmployeeId(data.getEmployeeId());
+        role.forEach(x -> {
+            if(x.getRoleId() == 4) {
+                List <EligibleParticipants> eligible = eligibleParticipantsRepository.findByUserRoleId(x.getUserRoleId());
+                eligible.forEach(y -> {
+                    if(Objects.equals(y.getTrainingPeriodId(), id)) {
+                        eligibleParticipantsRepository.delete(y.getEligibleParticipantsId());
+                    }
+                });
+                
             }
         });
     }

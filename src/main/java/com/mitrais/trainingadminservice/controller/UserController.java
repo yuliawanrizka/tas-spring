@@ -12,9 +12,13 @@
 
 package com.mitrais.trainingadminservice.controller;
 
+import com.mitrais.trainingadminservice.model.EligibleParticipants;
 import com.mitrais.trainingadminservice.model.Employee;
+import com.mitrais.trainingadminservice.model.UserRole;
+import com.mitrais.trainingadminservice.repository.EligibleParticipantsRepository;
 import com.mitrais.trainingadminservice.repository.EmployeeRepository;
 import com.mitrais.trainingadminservice.repository.GradeRepository;
+import com.mitrais.trainingadminservice.repository.UserRoleRepository;
 import com.mitrais.trainingadminservice.response.UserResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +26,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,10 +45,16 @@ public class UserController {
     @Autowired
     private GradeRepository gradeRepository;
     
+    @Autowired
+    private UserRoleRepository userRoleRepository;
+    
+    @Autowired
+    private EligibleParticipantsRepository eligibleParticipantsRepository;
+    
     private HashMap<Long,String> jobFamily = new HashMap<>();
     private HashMap<Long,String> grade = new HashMap<>();
     
-    @GetMapping(value = "eligible")
+    @GetMapping(value = "")
     public ResponseEntity getAllUsers() {
         List<Employee> employeeList = employeeRepository.findAll();
         
@@ -51,6 +62,23 @@ public class UserController {
         
         employeeList.forEach( data -> {
             response.add(generateUserResponse(data));
+        });
+        
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping(value = "eligible/{id}")
+    public ResponseEntity getEligibleUsers(@PathVariable ("id") Long id) {
+        List<Employee> employeeList = employeeRepository.findAll();
+        List<UserResponse> response = new ArrayList<>();
+        List<EligibleParticipants> eligibleData = eligibleParticipantsRepository.findByTrainingPeriodId(id);
+        List<Long> eligibleList = new ArrayList<>();
+        eligibleData.forEach(x -> {
+            eligibleList.add(userRoleRepository.findOne(x.getUserRoleId()).getEmployeeId());
+        });
+        employeeList.forEach(x -> {
+            if(!(eligibleList.contains(x.getEmployeeId()))) {
+                response.add(generateUserResponse(x));
+            }
         });
         
         return ResponseEntity.ok(response);
@@ -74,7 +102,18 @@ public class UserController {
             grade.put(data.getGradeId(), gradeRepository.findOne(data.getGradeId()).getGrade());
         }
         result.setGrade(grade.get(data.getGradeId()));
+        result.setActive(data.isActive());
+        result.setRole(getEmployeeRole(data.getEmployeeId()));
         
         return result;
+    }
+    
+    private List<Long> getEmployeeRole(Long id) {
+        List<UserRole> userRole = userRoleRepository.findByEmployeeId(id);
+        List<Long> x = new ArrayList<>();
+        userRole.forEach(role -> {
+            x.add(role.getRoleId());
+        });
+        return x;
     }
 }
