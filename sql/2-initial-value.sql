@@ -102,7 +102,7 @@ SET IDENTITY_INSERT [Course] OFF;
 -- Employee table init --
 SET IDENTITY_INSERT[Employee] ON;
 
-INSERT INTO [EMPLOYEE](employeeId, accountName, password, fullName, gradeId, stream, email, active, locationId) VALUES (1, 'mitrais\admin', '$2a$10$fo87Tigk947EXQM9ya6BiO9HOk62x2ez8fpZ17jLqaOERveT0ivq2', 'Administrator', 1, '-', 'admin@example.com', 1, 1);
+INSERT INTO [EMPLOYEE](employeeId, accountName, password, fullName, gradeId, stream, email, active, locationId) VALUES (1, 'mitrais\admin', '$2a$10$fo87Tigk947EXQM9ya6BiO9HOk62x2ez8fpZ17jLqaOERveT0ivq2', 'Administrator', 1, null, 'admin@example.com', 1, 1);
 
 SET IDENTITY_INSERT [Employee] OFF;
 

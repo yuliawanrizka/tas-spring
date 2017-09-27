@@ -96,7 +96,11 @@ public class UserController {
             jobFamily.put(data.getGradeId(), gradeRepository.findOne(data.getGradeId()).getJobFamily());
         }
         
-        result.setJobFamilyStream(jobFamily.get(data.getGradeId()) + "." + data.getStream());
+        if(data.getStream()== null) {
+            result.setJobFamilyStream(jobFamily.get(data.getGradeId()));
+        } else {
+            result.setJobFamilyStream(jobFamily.get(data.getGradeId()) + "." + data.getStream());
+        }
         
         if(grade.isEmpty() || !(grade.containsKey(data.getGradeId()))) {
             grade.put(data.getGradeId(), gradeRepository.findOne(data.getGradeId()).getGrade());

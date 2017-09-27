@@ -165,6 +165,9 @@ public class PeriodController {
         try{
             List<EligibleResponse> response = new ArrayList<>();
             List<EligibleParticipants> data = eligibleParticipantsRepository.findByTrainingPeriodId(id);
+            if(data.isEmpty()){
+                throw new NullPointerException();
+            }
             data.forEach(x -> {
                 response.add(new EligibleResponse(getEmployeeId(id), getEmployeeFullName(x.getUserRoleId())));
             });
@@ -201,12 +204,20 @@ public class PeriodController {
     
     @GetMapping(value = "{id}/course")
     public ResponseEntity getAllCourse(@PathVariable("id") final Long id) {
-        List<CoursePeriod> scheduleList = coursePeriodRepository.findByTrainingPeriodId(id);
-        List<CoursePeriodResponse> response = new ArrayList<>();
-        scheduleList.forEach(data -> {
-            response.add(generateCoursePeriodResponse(data));
-        });
-        return ResponseEntity.ok(response);
+        try {
+            List<CoursePeriod> scheduleList = coursePeriodRepository.findByTrainingPeriodId(id);
+            List<CoursePeriodResponse> response = new ArrayList<>();
+            if(scheduleList.isEmpty()) {
+                throw new NullPointerException();
+            }
+            scheduleList.forEach(data -> {
+                response.add(generateCoursePeriodResponse(data));
+            });
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.out.println("ERROR at \"api/secure/period/" + id + "/eligible\": " + e);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
     }
     
     private Long getEmployeeId (Long id) {
