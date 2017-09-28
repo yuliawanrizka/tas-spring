@@ -24,7 +24,7 @@
 
 	- ..../api/secure/period						(get)
 
-	- ..../api/secure/period/create						(post)
+	- ..../api/secure/period/add						(post)
 		{
 			trainingName	: String,
 			startDate	: Date,
@@ -45,23 +45,37 @@
 	- ..../api/secure/period/{idPeriod}/delete				(delete)
 	- ..../api/secure/period/{idPeriod}/eligible				(get)
 	- ..../api/secure/period/{idPeriod}/eligible/add			(post)
-		[
-			{
+		[{
 				employeeId	: number
-			},
-			{
-				employeeId	: number
-			}
-		]
-	- ..../api/secure/period/{idPeriod}/eligible/{idEmployee}/delete	(delete)
+		}]
+	- ..../api/secure/period/{idPeriod}/eligible/delete/{idEmployee}	(delete)
 	- ..../api/secure/period/{idPeriod}/course				(get)
-	- ..../api/secure/period/{idPeriod}/course/add				(post)	*
-	- ..../api/secure/period/{idPeriod}/course/delete			(post)	*
-	- ..../api/secure/period/course/					(get)	*
-	- ..../api/secure/period/course/add					(post)	*
+	- ..../api/secure/period/{idPeriod}/course/add				(post)
+		{
+			courseId	: number,
+   			mainTrainerId	: number,
+			backupTrainerId	: number,
+			classroomId	: number,
+			capacity	: number
+		}
+	- ..../api/secure/period/{idPeriod}/course/edit				(post)	*
+		[{
+			coursePeriodId	: number,
+			periodical	: boolean, 
+			startDate	: Date,		(optional)
+			endDate		: Date,		(optional)
+			startTime	: String,	(optional)
+			endTime		: String,	(optional)
+			day		: number	(optional)
+		}]
+	- ..../api/secure/period/{idPeriod}/course/delete/{idCoursePeriod}	(delete)
+	- ..../api/secure/period/{idPeriod}/course/{idCoursePeriod}		(get)	*
+	- ..../api/secure/period/course/					(get)
+	- ..../api/secure/period/classroom/					(get)
 
 # USER
 	- ..../api/secure/user							(get)
+	- ..../api/secure/user/trainer						(get)
 	- ..../api/secure/user/eligible/{idPeriod}				(get)
 
 

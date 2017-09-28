@@ -2,6 +2,7 @@
 DELETE FROM [UserRole];
 DELETE FROM [Employee];
 DELETE FROM [Course];
+DELETE FROM [Classroom];
 DELETE FROM [Location];
 DELETE FROM [Grade];
 DELETE FROM [Roles];
@@ -12,6 +13,8 @@ GO
 DBCC CHECKIDENT ('[Employee]', RESEED, 0);
 GO
 DBCC CHECKIDENT ('[Course]', RESEED, 0);
+GO
+DBCC CHECKIDENT ('[Classroom]', RESEED, 0);
 GO
 DBCC CHECKIDENT ('[Location]', RESEED, 0);
 GO
@@ -82,6 +85,16 @@ INSERT INTO [Location](locationId, location) VALUES ( 3, 'Bandung');
 INSERT INTO [Location](locationId, location) VALUES ( 4, 'Jakarta');
 
 SET IDENTITY_INSERT [Location] OFF;
+
+-- Classroom table init --
+SET IDENTITY_INSERT[Classroom] ON;
+
+INSERT INTO [Classroom](classroomId, classroom, locationId) VALUES ( 1, 'Saraswati Meeting Room', 1);
+INSERT INTO [Classroom](classroomId, classroom, locationId) VALUES ( 2, 'Bandung A', 3);
+INSERT INTO [Classroom](classroomId, classroom, locationId) VALUES ( 3, 'Borobudur Meeting Room', 2);
+INSERT INTO [Classroom](classroomId, classroom, locationId) VALUES ( 4, 'Jakarta A', 4);
+
+SET IDENTITY_INSERT [Classroom] OFF;
 
 -- Course table init --
 SET IDENTITY_INSERT[Course] ON;

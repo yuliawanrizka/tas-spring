@@ -23,7 +23,15 @@ public class CoursePeriodResponse {
     private String mainTrainer;
     private String backupTrainer;
     private String classroom;
+    private String day;
+    private String startTime;
+    private String endTime;
     private int capacity;
+    private int apList;
+    private String createdBy;
+    private String createdAt;
+    private String updatedBy;
+    private String updatedAt;
 
     public Long getCoursePeriodId() {
         return coursePeriodId;
@@ -71,5 +79,69 @@ public class CoursePeriodResponse {
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public int getApList() {
+        return apList;
+    }
+
+    public void setApList(int apList) {
+        this.apList = apList;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

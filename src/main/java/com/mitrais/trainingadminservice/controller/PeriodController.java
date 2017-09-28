@@ -12,6 +12,8 @@
 
 package com.mitrais.trainingadminservice.controller;
 
+import com.mitrais.trainingadminservice.model.Classroom;
+import com.mitrais.trainingadminservice.model.Course;
 import com.mitrais.trainingadminservice.model.CoursePeriod;
 import com.mitrais.trainingadminservice.model.EligibleParticipants;
 import com.mitrais.trainingadminservice.model.TrainingPeriod;
@@ -24,9 +26,12 @@ import com.mitrais.trainingadminservice.repository.EmployeeRepository;
 import com.mitrais.trainingadminservice.repository.LocationRepository;
 import com.mitrais.trainingadminservice.repository.TrainingPeriodRepository;
 import com.mitrais.trainingadminservice.repository.UserRoleRepository;
+import com.mitrais.trainingadminservice.request.CoursePeriodRequest;
 import com.mitrais.trainingadminservice.request.EligibleRequest;
 import com.mitrais.trainingadminservice.request.PeriodRequest;
+import com.mitrais.trainingadminservice.response.ClassroomResponse;
 import com.mitrais.trainingadminservice.response.CoursePeriodResponse;
+import com.mitrais.trainingadminservice.response.CourseResponse;
 import com.mitrais.trainingadminservice.response.EligibleResponse;
 import com.mitrais.trainingadminservice.response.PeriodResponse;
 import io.jsonwebtoken.Claims;
@@ -102,19 +107,25 @@ public class PeriodController {
         }
     }
     
-    @PostMapping(value = "create")
+    @PostMapping(value = "add")
     public ResponseEntity addPeriod(@RequestBody final PeriodRequest request, @RequestAttribute Claims claims) {
         try {
             TrainingPeriod data = new TrainingPeriod();
             
-            TrainingPeriod dataInserted = dataInsertion(data, request);
-            dataInserted.setCreatorId(new Long(claims.get("userId").toString()));
+            TrainingPeriod dataInserted = generateTrainingPeriod(data, request);
+            dataInserted.setActive(true);
+            List<UserRole> userRoleData = userRoleRepository.findByEmployeeId(new Long(claims.get("userId").toString()));
+            userRoleData.forEach(e -> {
+                if(e.getRoleId() == 1) {
+                    dataInserted.setCreatorId(e.getUserRoleId());
+                }
+            });
             dataInserted.setCreatedAt(new Timestamp(Calendar.getInstance().getTime().getTime()));
 
             trainingPeriodRepository.save(dataInserted);
             return ResponseEntity.status(HttpStatus.CREATED).body(true);
         } catch (Exception e) {
-            System.out.println("ERROR at \"api/secure/period/create\": " + e);
+            System.out.println("ERROR at \"api/secure/period/add\": " + e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
@@ -132,13 +143,19 @@ public class PeriodController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
     }
+    
     @PostMapping(value = "{id}/edit")
     public ResponseEntity editPeriod(@RequestBody final PeriodRequest request, @PathVariable ("id") final Long id, @RequestAttribute Claims claims) {
         try {
             TrainingPeriod data = trainingPeriodRepository.findOne(id);
             
-            TrainingPeriod dataInserted = dataInsertion(data, request);
-            dataInserted.setUpdaterId(new Long(claims.get("userId").toString()));
+            TrainingPeriod dataInserted = generateTrainingPeriod(data, request);
+            List<UserRole> userRoleData = userRoleRepository.findByEmployeeId(new Long(claims.get("userId").toString()));
+            userRoleData.forEach(e -> {
+                if(e.getRoleId() == 1) {
+                    dataInserted.setUpdaterId(e.getUserRoleId());
+                }
+            });
             dataInserted.setUpdatedAt(new Timestamp(Calendar.getInstance().getTime().getTime()));
             
             trainingPeriodRepository.save(dataInserted);
@@ -191,19 +208,19 @@ public class PeriodController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
-    @DeleteMapping(value = "{id}/eligible/{idUser}/delete")
+    @DeleteMapping(value = "{id}/eligible/delete/{idUser}")
     public ResponseEntity deleteEligibleParticipants(@PathVariable("id") final Long id, @PathVariable("idUser") final Long idUser) {
         try {
             deleteEligibleUser(idUser, id);
             return ResponseEntity.ok(true);
         } catch (Exception e) {
-            System.out.println("ERROR at \"api/secure/period/" + id + "/eligible/add\": " + e);
+            System.out.println("ERROR at \"api/secure/period/" + id + "/eligible/delete/"+ idUser +"\": " + e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
     
     @GetMapping(value = "{id}/course")
-    public ResponseEntity getAllCourse(@PathVariable("id") final Long id) {
+    public ResponseEntity getAllCoursePeriod(@PathVariable("id") final Long id) {
         try {
             List<CoursePeriod> scheduleList = coursePeriodRepository.findByTrainingPeriodId(id);
             List<CoursePeriodResponse> response = new ArrayList<>();
@@ -219,6 +236,92 @@ public class PeriodController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
     }
+    @PostMapping(value = "{id}/course/add")
+    public ResponseEntity addCoursePeriod(@RequestBody final CoursePeriodRequest request, @PathVariable ("id") Long id, @RequestAttribute Claims claims) {
+        try {
+            CoursePeriod data = new CoursePeriod();
+            
+            data.setCourseId(request.getCourseId());
+            data.setTrainingPeriodId(id);
+            data.setMainTrainer(request.getMainTrainerId());
+            if(request.getBackupTrainerId() != null){
+                data.setBackupTrainer(request.getBackupTrainerId());
+            }
+            
+            data.setClassroomId(request.getClassroomId());
+            data.setCapacity(request.getCapacity());
+            
+            List<UserRole> userRoleData = userRoleRepository.findByEmployeeId(new Long(claims.get("userId").toString()));
+            userRoleData.forEach(e -> {
+                if(e.getRoleId() == 1) {
+                    data.setCreatorId(e.getUserRoleId());
+                }
+            });
+            data.setCreatedAt(new Timestamp(Calendar.getInstance().getTime().getTime()));
+            
+            coursePeriodRepository.save(data);
+            
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            System.out.println("ERROR at \"api/secure/"+id+"/period/add\": " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
+    }
+    
+    @PostMapping(value = "{id}/course/edit")
+    public ResponseEntity editCoursePeriod(@RequestBody final List<CoursePeriodRequest> request, @PathVariable ("id") Long id, @RequestAttribute Claims claims) {
+        try {
+            request.forEach(e -> {
+                editCoursePeriodData(e, new Long(claims.get("userId").toString()));
+            });
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            System.out.println("ERROR at \"api/secure/"+id+"/period/add\": " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
+    }
+    
+    @DeleteMapping(value = "{id}/course/delete/{idCoursePeriod}")
+    public ResponseEntity deleteCoursePeriod(@PathVariable("id") final Long id, @PathVariable("idCoursePeriod") final Long idCoursePeriod) {
+        try {
+            coursePeriodRepository.delete(idCoursePeriod);
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            System.out.println("ERROR at \"api/secure/period/" + id + "/eligible/delete/"+ idCoursePeriod +"\": " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
+    }
+    
+    @GetMapping(value = "course")
+    public ResponseEntity getAllCourse() {
+        try {
+            List<Course> course = courseRepository.findAll();
+            List<CourseResponse> response = new ArrayList<>();
+            course.forEach(e -> {
+                response.add(generateCourseResponse(e));
+            });
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.out.println("ERROR at \"api/secure/period/course\": " + e);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+        
+    }
+    @GetMapping(value = "classroom")
+    public ResponseEntity getClassroom() {
+        try {
+            List<Classroom> classroom = classroomRepository.findAll();
+            List<ClassroomResponse> response = new ArrayList<>();
+            classroom.forEach(e -> {
+                response.add(generateClassroomResponse(e));
+            });
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.out.println("ERROR at \"api/secure/period/course\": " + e);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+    }
     
     private Long getEmployeeId (Long id) {
         return userRoleRepository.getOne(id).getEmployeeId();
@@ -228,7 +331,31 @@ public class PeriodController {
         return employeeRepository.getOne(userRoleRepository.getOne(id).getEmployeeId()).getFullName();
     }
     
-    private CoursePeriodResponse generateCoursePeriodResponse (CoursePeriod data) {
+    private ClassroomResponse generateClassroomResponse(Classroom data){
+        ClassroomResponse result = new ClassroomResponse();
+        
+        result.setClassroomId(data.getClassroomId());
+        
+        if (classroomList.isEmpty() || !(classroomList.containsKey(data.getClassroomId()))) {
+            classroomList.put(data.getClassroomId(),classroomRepository.findOne(data.getClassroomId()).getClassroom());
+        }
+        if (locationList.isEmpty() || !(locationList.containsKey(data.getClassroomId()))) {
+            locationList.put(data.getClassroomId(), locationRepository.findOne(classroomRepository.findOne(data.getClassroomId()).getLocationId()).getLocation());
+        }
+        
+        result.setClassroomName(classroomList.get(data.getClassroomId())+ ", " + locationList.get(data.getClassroomId()));
+        
+        return result;
+    }
+    
+    private CourseResponse generateCourseResponse (Course data) {
+        CourseResponse result = new CourseResponse();
+        result.setCourseId(data.getCourseId());
+        result.setCourseName(data.getCourseName());
+        return result;
+    }
+    
+   private CoursePeriodResponse generateCoursePeriodResponse (CoursePeriod data) {
         CoursePeriodResponse result = new CoursePeriodResponse();
         
         result.setCoursePeriodId(data.getCoursePeriodId());
@@ -259,7 +386,38 @@ public class PeriodController {
             locationList.put(data.getClassroomId(), locationRepository.findOne(classroomRepository.findOne(data.getClassroomId()).getLocationId()).getLocation());
         }
         result.setClassroom(classroomList.get(data.getClassroomId())+ ", " + locationList.get(data.getClassroomId()));
+        if(data.getDayOfTraining() != null) {
+            result.setDay(data.getDayOfTraining().toString());
+        } else {
+            result.setDay("");
+        }
+        
+        result.setStartTime("?");
+        result.setEndTime("?");
         result.setCapacity(data.getCapacity());
+        result.setApList(0);
+        
+        if(!(employeeNameList.containsKey(data.getCreatorId()))){
+            employeeNameList.put(data.getCreatorId(), getEmployeeFullName(data.getCreatorId()));
+        }
+        result.setCreatedBy(employeeNameList.get(data.getCreatorId()));
+        
+        if (data.getUpdaterId() != null) {
+           if(!(employeeNameList.containsKey(data.getUpdaterId()))){
+                employeeNameList.put(data.getUpdaterId(), getEmployeeFullName(data.getUpdaterId()));
+            }
+            result.setUpdatedBy(employeeNameList.get(data.getUpdaterId()));
+        } else {
+            result.setUpdatedBy("-");
+        }
+        
+        result.setCreatedAt(data.getCreatedAt().toString());
+        if(data.getUpdatedAt() != null) {
+            result.setUpdatedAt(data.getUpdatedAt().toString());
+        } else {
+            result.setUpdatedAt("-");
+        }
+        
         
         return result;
     }
@@ -270,7 +428,7 @@ public class PeriodController {
         result.setTrainingPeriodId(data.getTrainingPeriodId());
         result.setTrainingName(data.getTrainingName());
         result.setActiveStatus(data.isActive());
-        result.setCoursesCount(0);
+        result.setCoursesCount(coursePeriodRepository.findByTrainingPeriodId(data.getTrainingPeriodId()).size());
         result.setStartDate(data.getStartDate());
         result.setEndDate(data.getEndDate());
 
@@ -290,7 +448,7 @@ public class PeriodController {
         result.setOpenEnrollment(data.isOpenEnrollment());
         return result;
     }
-    private TrainingPeriod dataInsertion(TrainingPeriod data, PeriodRequest source) {
+    private TrainingPeriod generateTrainingPeriod(TrainingPeriod data, PeriodRequest source) {
         data.setTrainingName(source.getTrainingName());
         data.setActive(source.isActive());
         data.setStartDate(source.getStartDate());
@@ -329,5 +487,26 @@ public class PeriodController {
                 });
             }
         });
+    }
+
+    private void editCoursePeriodData(CoursePeriodRequest e, Long id) {
+        CoursePeriod data = coursePeriodRepository.findOne(e.getCoursePeriodId());
+        
+        data.setPeriodical(e.isPeriodical());
+        if (e.isPeriodical()) {
+            data.setDayOfTraining(e.getDay());
+            //spawn some schedule
+        } else {
+            //spawn one schedule
+        }
+        List<UserRole> userRoleData = userRoleRepository.findByEmployeeId(id);
+        userRoleData.forEach(x -> {
+            if(x.getRoleId() == 1) {
+                data.setUpdaterId(x.getUserRoleId());
+            }
+        });
+        data.setUpdatedAt(new Timestamp(Calendar.getInstance().getTime().getTime()));
+        
+        coursePeriodRepository.save(data);
     }
 }

@@ -39,6 +39,8 @@ public class CoursePeriod {
     private Long updaterId;
     private Timestamp updatedAt;
     private boolean onlineClass;
+    private Boolean periodical;
+    private Integer dayOfTraining;
 
     public Long getCoursePeriodId() {
         return coursePeriodId;
@@ -134,6 +136,21 @@ public class CoursePeriod {
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
+    }    
+
+    public Boolean isPeriodical() {
+        return periodical;
     }
-    
+
+    public void setPeriodical(Boolean periodical) {
+        this.periodical = periodical;
+    }
+
+    public Integer getDayOfTraining() {
+        return dayOfTraining;
+    }
+
+    public void setDayOfTraining(Integer dayOfTraining) {
+        this.dayOfTraining = dayOfTraining;
+    }
 }

@@ -76,11 +76,27 @@ public class UserController {
             eligibleList.add(userRoleRepository.findOne(x.getUserRoleId()).getEmployeeId());
         });
         employeeList.forEach(x -> {
-            if(!(eligibleList.contains(x.getEmployeeId()))) {
-                response.add(generateUserResponse(x));
+            if (x.isActive()) {
+                if(!(eligibleList.contains(x.getEmployeeId()))) {
+                    response.add(generateUserResponse(x));
+                }
             }
         });
         
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping(value = "trainer")
+    public ResponseEntity getTrainer() {
+        List<Employee> employeeList = employeeRepository.findAll();
+        List<UserResponse> response = new ArrayList<>();
+        employeeList.forEach(e -> {
+            List<UserRole> roleList = userRoleRepository.findByEmployeeId(e.getEmployeeId());
+            roleList.forEach(x -> {
+                if(x.getRoleId() == 2) {
+                    response.add(generateUserResponse(e));
+                }
+            });
+        });
         return ResponseEntity.ok(response);
     }
     
