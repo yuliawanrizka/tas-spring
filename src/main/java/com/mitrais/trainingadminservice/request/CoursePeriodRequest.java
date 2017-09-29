@@ -21,7 +21,6 @@ import java.sql.Time;
  * 
  */
 public class CoursePeriodRequest {
-    private Long coursePeriodId;
     private Long courseId;
     private Long mainTrainerId;
     private Long backupTrainerId;
@@ -31,15 +30,7 @@ public class CoursePeriodRequest {
     private Date endDate;
     private String startTime;
     private String endTime;
-    private int day;            
-
-    public Long getCoursePeriodId() {
-        return coursePeriodId;
-    }
-
-    public void setCoursePeriodId(Long coursePeriodId) {
-        this.coursePeriodId = coursePeriodId;
-    }
+    private int day;
 
     public Long getCourseId() {
         return courseId;

@@ -59,15 +59,14 @@
 			classroomId	: number,
 			capacity	: number
 		}
-	- ..../api/secure/period/{idPeriod}/course/edit				(post)
-		[{
-			coursePeriodId	: number,
+	- ..../api/secure/period/{idPeriod}/course/{coursePeriodId}/edit				(post)
+		{
 			startDate	: Date,		(optional)
 			endDate		: Date,		(optional)
 			startTime	: String,
 			endTime		: String,
 			day		: number	(optional)
-		}]
+		}
 	- ..../api/secure/period/{idPeriod}/course/delete/{idCoursePeriod}	(delete)
 	- ..../api/secure/period/{idPeriod}/course/{idCoursePeriod}		(get)
 	- ..../api/secure/period/{idPeriod}/course/{idCourseperiod}/eligible	(get)

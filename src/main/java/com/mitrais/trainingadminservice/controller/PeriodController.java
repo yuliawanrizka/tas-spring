@@ -288,12 +288,10 @@ public class PeriodController {
         }
     }
     
-    @PostMapping(value = "{id}/course/edit")
-    public ResponseEntity editCoursePeriod(@RequestBody final List<CoursePeriodRequest> request, @PathVariable ("id") Long id, @RequestAttribute Claims claims) {
+    @PostMapping(value = "{id}/course/{idCoursePeriod}/edit")
+    public ResponseEntity editCoursePeriod(@RequestBody final CoursePeriodRequest request, @PathVariable ("id") Long id, @RequestAttribute Claims claims, @PathVariable ("idCoursePeriod") Long idCoursePeriod) {
         try {
-            request.forEach(e -> {
-                editCoursePeriodData(e, new Long(claims.get("userId").toString()), id);
-            });
+                editCoursePeriodData(request, new Long(claims.get("userId").toString()), id, idCoursePeriod);
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             System.out.println("ERROR at \"api/secure/"+id+"/period/add\": " + e);
@@ -573,8 +571,8 @@ public class PeriodController {
         });
     }
 
-    private void editCoursePeriodData(CoursePeriodRequest e, Long id, Long periodId) {
-        CoursePeriod data = coursePeriodRepository.findOne(e.getCoursePeriodId());
+    private void editCoursePeriodData(CoursePeriodRequest e, Long id, Long periodId, Long coursePeriodId) {
+        CoursePeriod data = coursePeriodRepository.findOne(coursePeriodId);
         
         data.setPeriodical(trainingPeriodRepository.findOne(periodId).isPeriodical());
         if (data.isPeriodical()) {
@@ -594,7 +592,7 @@ public class PeriodController {
             while (endPeriod.after(scheduleDate)) {
                 Schedule schedule = new Schedule();
             
-                schedule.setCoursePeriodId(e.getCoursePeriodId());
+                schedule.setCoursePeriodId(coursePeriodId);
                 schedule.setStartDate(scheduleDate);
                 schedule.setStartTime(e.getStartTime());
                 schedule.setEndDate(scheduleDate);
@@ -607,7 +605,7 @@ public class PeriodController {
         } else {
             Schedule schedule = new Schedule();
             
-            schedule.setCoursePeriodId(e.getCoursePeriodId());
+            schedule.setCoursePeriodId(coursePeriodId);
             schedule.setStartDate(e.getStartDate());
             schedule.setStartTime(e.getStartTime());
             schedule.setEndDate(e.getEndDate());
