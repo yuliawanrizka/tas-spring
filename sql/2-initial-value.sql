@@ -2,22 +2,25 @@
 DELETE FROM [UserRole];
 DELETE FROM [Employee];
 DELETE FROM [Course];
+DELETE FROM [Classroom];
 DELETE FROM [Location];
 DELETE FROM [Grade];
 DELETE FROM [Roles];
 
 -- Reseed Primary Key --
-DBCC CHECKIDENT ('[UserRole]', RESEED, 1);
+DBCC CHECKIDENT ('[UserRole]', RESEED, 0);
 GO
-DBCC CHECKIDENT ('[Employee]', RESEED, 1);
+DBCC CHECKIDENT ('[Employee]', RESEED, 0);
 GO
-DBCC CHECKIDENT ('[Course]', RESEED, 1);
+DBCC CHECKIDENT ('[Course]', RESEED, 0);
 GO
-DBCC CHECKIDENT ('[Location]', RESEED, 1);
+DBCC CHECKIDENT ('[Classroom]', RESEED, 0);
 GO
-DBCC CHECKIDENT ('[Grade]', RESEED, 1);
+DBCC CHECKIDENT ('[Location]', RESEED, 0);
 GO
-DBCC CHECKIDENT ('[Roles]', RESEED, 1);
+DBCC CHECKIDENT ('[Grade]', RESEED, 0);
+GO
+DBCC CHECKIDENT ('[Roles]', RESEED, 0);
 GO
 
 
@@ -83,6 +86,16 @@ INSERT INTO [Location](locationId, location) VALUES ( 4, 'Jakarta');
 
 SET IDENTITY_INSERT [Location] OFF;
 
+-- Classroom table init --
+SET IDENTITY_INSERT[Classroom] ON;
+
+INSERT INTO [Classroom](classroomId, classroom, locationId) VALUES ( 1, 'Saraswati Meeting Room', 1);
+INSERT INTO [Classroom](classroomId, classroom, locationId) VALUES ( 2, 'Bandung A', 3);
+INSERT INTO [Classroom](classroomId, classroom, locationId) VALUES ( 3, 'Borobudur Meeting Room', 2);
+INSERT INTO [Classroom](classroomId, classroom, locationId) VALUES ( 4, 'Jakarta A', 4);
+
+SET IDENTITY_INSERT [Classroom] OFF;
+
 -- Course table init --
 SET IDENTITY_INSERT[Course] ON;
 
@@ -102,7 +115,7 @@ SET IDENTITY_INSERT [Course] OFF;
 -- Employee table init --
 SET IDENTITY_INSERT[Employee] ON;
 
-INSERT INTO [EMPLOYEE](employeeId, accountName, password, fullName, gradeId, stream, email, active, locationId) VALUES (1, 'mitrais\admin', '$2a$10$fo87Tigk947EXQM9ya6BiO9HOk62x2ez8fpZ17jLqaOERveT0ivq2', 'Administrator', 5, '-', 'admin@example.com', 1, 1);
+INSERT INTO [EMPLOYEE](employeeId, accountName, password, fullName, gradeId, stream, email, active, locationId) VALUES (1, 'mitrais\admin', '$2a$10$fo87Tigk947EXQM9ya6BiO9HOk62x2ez8fpZ17jLqaOERveT0ivq2', 'Administrator', 1, null, 'admin@example.com', 1, 1);
 
 SET IDENTITY_INSERT [Employee] OFF;
 

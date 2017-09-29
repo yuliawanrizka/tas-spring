@@ -28,7 +28,10 @@ public class Schedule {
     @GeneratedValue
     private Long scheduleId;
     private Long coursePeriodId;
-    private Date date;
+    private Date startDate;
+    private Date endDate;
+    private String startTime;
+    private String endTime;
 
     public Long getScheduleId() {
         return scheduleId;
@@ -46,11 +49,35 @@ public class Schedule {
         this.coursePeriodId = coursePeriodId;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

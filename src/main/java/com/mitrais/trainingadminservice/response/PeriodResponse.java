@@ -29,6 +29,7 @@ public class PeriodResponse {
     private Date endDate;
     private String createdBy;
     private String editedBy;
+    private boolean openEnrollment;
 
     public Long getTrainingPeriodId() {
         return trainingPeriodId;
@@ -92,5 +93,13 @@ public class PeriodResponse {
 
     public void setEditedBy(String editedBy) {
         this.editedBy = editedBy;
+    }
+
+    public boolean isOpenEnrollment() {
+        return openEnrollment;
+    }
+
+    public void setOpenEnrollment(boolean openEnrollment) {
+        this.openEnrollment = openEnrollment;
     }
 }
