@@ -457,13 +457,26 @@ public class PeriodController {
         
         result.setClassroom(classroomList.get(data.getClassroomId()));
         if(data.getDayOfTraining() != null) {
-            result.setDay(data.getDayOfTraining().toString());
+            result.setDay(data.translateDayOfTraining());
         } else {
-            result.setDay("");
+            result.setDay("-");
+        }
+        List<Schedule> scheduleList = scheduleRepository.findByCoursePeriodId(data.getCoursePeriodId());
+        if (scheduleList.isEmpty()) {
+           result.setStartTime("-");
+           result.setEndTime("-");
+        } else {
+            Schedule scheduleForData = scheduleList.get(0);
+            if(data.isPeriodical()) {
+                result.setStartTime(scheduleForData.getStartTime());
+                result.setEndTime(scheduleForData.getEndTime());
+            } else {
+                result.setStartTime(scheduleForData.getStartDate().toString() + " " + scheduleForData.getStartTime());
+                result.setEndTime(scheduleForData.getEndDate().toString() + " " + scheduleForData.getEndTime());
+            }
         }
         
-        result.setStartTime("?");
-        result.setEndTime("?");
+        
         result.setCapacity(data.getCapacity());
         result.setApList(enrolledParticipantsRepository.findByCoursePeriodId(data.getCoursePeriodId()).size());
         
