@@ -302,7 +302,10 @@ public class PeriodController {
     @DeleteMapping(value = "{id}/course/delete/{idCoursePeriod}")
     public ResponseEntity deleteCoursePeriod(@PathVariable("id") final Long id, @PathVariable("idCoursePeriod") final Long idCoursePeriod) {
         try {
-            scheduleRepository.deleteByCoursePeriodId(idCoursePeriod);
+            List<Schedule> listToDelete = scheduleRepository.findByCoursePeriodId(idCoursePeriod);
+            listToDelete.forEach(e -> {
+                scheduleRepository.delete(e);
+            });
             coursePeriodRepository.delete(idCoursePeriod);
             return ResponseEntity.ok(true);
         } catch (Exception e) {
@@ -591,11 +594,12 @@ public class PeriodController {
             Date endPeriod = trainingPeriodRepository.findOne(data.getTrainingPeriodId()).getEndDate();
             while (endPeriod.after(scheduleDate)) {
                 Schedule schedule = new Schedule();
+                Date scheduleDateInput = new Date(cal.getTimeInMillis());
             
                 schedule.setCoursePeriodId(coursePeriodId);
-                schedule.setStartDate(scheduleDate);
+                schedule.setStartDate(scheduleDateInput);
                 schedule.setStartTime(e.getStartTime());
-                schedule.setEndDate(scheduleDate);
+                schedule.setEndDate(scheduleDateInput);
                 schedule.setEndTime(e.getEndTime());
             
                 scheduleRepository.save(schedule);
