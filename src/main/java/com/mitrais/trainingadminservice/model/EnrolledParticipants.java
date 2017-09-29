@@ -27,8 +27,16 @@ public class EnrolledParticipants {
     @Id
     @GeneratedValue
     private Long enrolledParticipantsId;
-    private Long elogibleParticipantsId;
+    private Long eligibleParticipantsId;
     private Long coursePeriodId;
+
+    public EnrolledParticipants() {
+    }
+
+    public EnrolledParticipants(Long eligibleParticipantsId, Long coursePeriodId) {
+        this.eligibleParticipantsId = eligibleParticipantsId;
+        this.coursePeriodId = coursePeriodId;
+    }
 
     public Long getEnrolledParticipantsId() {
         return enrolledParticipantsId;
@@ -38,12 +46,12 @@ public class EnrolledParticipants {
         this.enrolledParticipantsId = enrolledParticipantsId;
     }
 
-    public Long getElogibleParticipantsId() {
-        return elogibleParticipantsId;
+    public Long getEligibleParticipantsId() {
+        return eligibleParticipantsId;
     }
 
-    public void setElogibleParticipantsId(Long elogibleParticipantsId) {
-        this.elogibleParticipantsId = elogibleParticipantsId;
+    public void setEligibleParticipantsId(Long eligibleParticipantsId) {
+        this.eligibleParticipantsId = eligibleParticipantsId;
     }
 
     public Long getCoursePeriodId() {
