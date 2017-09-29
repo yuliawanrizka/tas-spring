@@ -30,6 +30,7 @@ public class PeriodResponse {
     private String createdBy;
     private String editedBy;
     private boolean openEnrollment;
+    private boolean periodical;
 
     public Long getTrainingPeriodId() {
         return trainingPeriodId;
@@ -101,5 +102,13 @@ public class PeriodResponse {
 
     public void setOpenEnrollment(boolean openEnrollment) {
         this.openEnrollment = openEnrollment;
+    }
+
+    public boolean isPeriodical() {
+        return periodical;
+    }
+
+    public void setPeriodical(boolean periodical) {
+        this.periodical = periodical;
     }
 }

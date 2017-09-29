@@ -28,7 +28,8 @@ public class UserResponse {
     private String email;
     private String accountName;
     private boolean active;
-    private List<Long> role ;
+    private List<Long> role;
+    private String location;
 
     public Long getEmployeeId() {
         return employeeId;
@@ -92,6 +93,13 @@ public class UserResponse {
 
     public void setRole(List<Long> role) {
         this.role = role;
+    }    
+
+    public String getLocation() {
+        return location;
     }
-    
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 }

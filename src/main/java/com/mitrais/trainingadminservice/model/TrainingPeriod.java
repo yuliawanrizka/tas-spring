@@ -38,6 +38,7 @@ public class TrainingPeriod {
     private Long updaterId;
     private Timestamp updatedAt;
     private boolean openEnrollment;
+    private boolean periodical;
 
     public Long getTrainingPeriodId() {
         return trainingPeriodId;
@@ -117,5 +118,13 @@ public class TrainingPeriod {
 
     public void setOpenEnrollment(boolean openEnrollment) {
         this.openEnrollment = openEnrollment;
+    }
+
+    public boolean isPeriodical() {
+        return periodical;
+    }
+
+    public void setPeriodical(boolean periodical) {
+        this.periodical = periodical;
     }
 }
