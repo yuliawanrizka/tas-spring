@@ -27,7 +27,6 @@ public class CoursePeriodRequest {
     private Long backupTrainerId;
     private Long classroomId;
     private int capacity;
-    private boolean periodical;
     private Date startDate;
     private Date endDate;
     private String startTime;
@@ -80,14 +79,6 @@ public class CoursePeriodRequest {
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
-    }
-
-    public boolean isPeriodical() {
-        return periodical;
-    }
-
-    public void setPeriodical(boolean periodical) {
-        this.periodical = periodical;
     }
 
     public Date getStartDate() {

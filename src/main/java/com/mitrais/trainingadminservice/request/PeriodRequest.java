@@ -25,6 +25,7 @@ public class PeriodRequest {
     private Date startDate;
     private Date endDate;
     private boolean openEnrollment;
+    private boolean periodical;
 
     public String getTrainingName() {
         return trainingName;
@@ -64,5 +65,13 @@ public class PeriodRequest {
 
     public void setOpenEnrollment(boolean openEnrollment) {
         this.openEnrollment = openEnrollment;
+    }
+
+    public boolean isPeriodical() {
+        return periodical;
+    }
+
+    public void setPeriodical(boolean periodical) {
+        this.periodical = periodical;
     }
 }

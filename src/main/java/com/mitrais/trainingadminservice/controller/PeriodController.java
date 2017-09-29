@@ -132,6 +132,7 @@ public class PeriodController {
             
             TrainingPeriod dataInserted = generateTrainingPeriod(data, request);
             dataInserted.setActive(true);
+            dataInserted.setPeriodical(request.isPeriodical());
             List<UserRole> userRoleData = userRoleRepository.findByEmployeeId(new Long(claims.get("userId").toString()));
             userRoleData.forEach(e -> {
                 if(e.getRoleId() == 1) {
@@ -291,7 +292,7 @@ public class PeriodController {
     public ResponseEntity editCoursePeriod(@RequestBody final List<CoursePeriodRequest> request, @PathVariable ("id") Long id, @RequestAttribute Claims claims) {
         try {
             request.forEach(e -> {
-                editCoursePeriodData(e, new Long(claims.get("userId").toString()));
+                editCoursePeriodData(e, new Long(claims.get("userId").toString()), id);
             });
             return ResponseEntity.ok(true);
         } catch (Exception e) {
@@ -515,6 +516,7 @@ public class PeriodController {
             result.setEditedBy("-");
         }
         result.setOpenEnrollment(data.isOpenEnrollment());
+        result.setPeriodical(data.isPeriodical());
         return result;
     }
     private TrainingPeriod generateTrainingPeriod(TrainingPeriod data, PeriodRequest source) {
@@ -558,11 +560,11 @@ public class PeriodController {
         });
     }
 
-    private void editCoursePeriodData(CoursePeriodRequest e, Long id) {
+    private void editCoursePeriodData(CoursePeriodRequest e, Long id, Long periodId) {
         CoursePeriod data = coursePeriodRepository.findOne(e.getCoursePeriodId());
         
-        data.setPeriodical(e.isPeriodical());
-        if (e.isPeriodical()) {
+        data.setPeriodical(trainingPeriodRepository.findOne(periodId).isPeriodical());
+        if (data.isPeriodical()) {
             data.setDayOfTraining(e.getDay());
             int offset;
             Calendar cal = Calendar.getInstance();

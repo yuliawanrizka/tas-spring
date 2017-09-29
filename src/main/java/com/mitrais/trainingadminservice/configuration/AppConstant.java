@@ -59,4 +59,9 @@ public class AppConstant {
      *<b>CONSTANT VALUE :</b> Value if remember me is true, 3 Hours.
      */
     public static final int REMEMBER_ME_FALSE_VALID_TIME = 3 * 60 * 60 * 1000;
+    
+    /**
+     *<b>CONSTANT VALUE :</b> Value for bcrypt strength.
+     */
+    public static final int BCRYPT_STRENGTH = 10;
 }

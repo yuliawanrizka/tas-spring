@@ -29,7 +29,8 @@
 			trainingName	: String,
 			startDate	: Date,
 			endDate		: Date,
-			openEnrollment	: boolean
+			openEnrollment	: boolean,
+			periodical	: boolean
 		}
 
 	- ..../api/secure/period/{idPeriod}					(get)
@@ -61,7 +62,6 @@
 	- ..../api/secure/period/{idPeriod}/course/edit				(post)
 		[{
 			coursePeriodId	: number,
-			periodical	: boolean, 
 			startDate	: Date,		(optional)
 			endDate		: Date,		(optional)
 			startTime	: String,
@@ -80,10 +80,29 @@
 
 # USER
 	- ..../api/secure/user							(get)
-	- ..../api/secure/user/add						(post)	*
-	- ..../api/secure/user/edit						(post)	*
+	- ..../api/secure/user/add						(post)
+		{
+			accountName	: String,
+			password	: String,
+			fullName	: String,
+			gradeId		: number,
+			stream		: String,
+			email		: String,
+			locationId	: number
+		}
+	- ..../api/secure/user/{idUser}						(get)
+	- ..../api/secure/user/{idUser}/edit/					(post)
+		{
+			active		: boolean,
+			role 		:
+					[{
+						roleId	:number
+					}]
+		}
 	- ..../api/secure/user/trainer						(get)
 	- ..../api/secure/user/eligible/{idPeriod}				(get)
+	- ..../api/secure/user/grade						(get)
+	- ..../api/secure/user/location						(get)
 
 
 # ENROLLMENT

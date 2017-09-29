@@ -29,6 +29,7 @@ public class UserRole {
     private Long userRoleId;
     private Long employeeId;
     private Long roleId;
+    private boolean active;
 
     public Long getUserRoleId() {
         return userRoleId;
@@ -52,5 +53,13 @@ public class UserRole {
 
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
