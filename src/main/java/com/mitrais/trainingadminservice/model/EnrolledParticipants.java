@@ -29,7 +29,6 @@ public class EnrolledParticipants {
     private Long enrolledParticipantsId;
     private Long eligibleParticipantsId;
     private Long coursePeriodId;
-    private boolean active;
 
     public EnrolledParticipants() {
     }
@@ -61,13 +60,5 @@ public class EnrolledParticipants {
 
     public void setCoursePeriodId(Long coursePeriodId) {
         this.coursePeriodId = coursePeriodId;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
     }
 }

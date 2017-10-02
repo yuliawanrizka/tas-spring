@@ -226,7 +226,7 @@ public class UserController {
             employeeList.forEach(e -> {
                 List<UserRole> roleList = userRoleRepository.findByEmployeeId(e.getEmployeeId());
                 roleList.forEach(x -> {
-                    if(x.getRoleId() == 2) {
+                    if(x.getRoleId() == 2 && x.isActive()) {
                         response.add(generateUserResponse(e));
                     }
                 });
