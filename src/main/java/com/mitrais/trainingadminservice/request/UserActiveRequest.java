@@ -12,7 +12,6 @@
 
 package com.mitrais.trainingadminservice.request;
 
-import java.util.List;
 
 
 /**

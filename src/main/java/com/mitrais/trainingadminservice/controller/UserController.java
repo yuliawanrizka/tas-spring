@@ -95,7 +95,7 @@ public class UserController {
             Employee addData = new Employee();
             BCryptPasswordEncoder creator = new BCryptPasswordEncoder(AppConstant.BCRYPT_STRENGTH, new SecureRandom());
 
-            addData.setAccountName(request.getAccountName());
+            addData.setAccountName("mitrais\\" +request.getAccountName());
             addData.setPassword(creator.encode(request.getPassword()));
             addData.setFullName(request.getFullName());
             addData.setGradeId(request.getGradeId());
@@ -106,7 +106,7 @@ public class UserController {
 
             employeeRepository.save(addData);
             
-            Employee dataSaved = employeeRepository.findByAccountName(request.getAccountName());
+            Employee dataSaved = employeeRepository.findByAccountName("mitrais\\" +request.getAccountName());
             UserRole settingRole = new UserRole();
             
             settingRole.setEmployeeId(dataSaved.getEmployeeId());
@@ -168,7 +168,6 @@ public class UserController {
         try {
             List<UserRole> userRoleList = userRoleRepository.findByEmployeeId(id);
             List<Long> roleActivate = new ArrayList<>();
-            List<Long> roleExist = new ArrayList<>();
             request.forEach(e -> {
                 roleActivate.add(e.getRoleId());
             });

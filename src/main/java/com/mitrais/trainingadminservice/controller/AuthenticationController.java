@@ -22,6 +22,7 @@ import com.mitrais.trainingadminservice.response.LoginResponse;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 
 import java.util.Date;
@@ -55,14 +56,21 @@ public class AuthenticationController {
         String jwtToken = "";
         int validTime;
         
-        BCryptPasswordEncoder checker = new BCryptPasswordEncoder();
+        BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder(AppConstant.BCRYPT_STRENGTH, new SecureRandom());
         
         String username = request.getUsername();
         String password = request.getPassword();
         
         Employee employee = employeeRepository.findByAccountName("mitrais\\" + username);
+        String[] split = employee.getPassword().split("\\$");
+        int currentStrength = Integer.parseInt(split[2]);
         
-            if (checker.matches(password, employee.getPassword())) {
+            if (bcrypt.matches(password, employee.getPassword())) {
+                if(currentStrength < AppConstant.BCRYPT_STRENGTH) {
+                    employee.setPassword(bcrypt.encode(password));
+                    employeeRepository.save(employee);
+                }
+                
                 LoginResponse response = new LoginResponse();
                 
                 if (request.isRememberMe()) {

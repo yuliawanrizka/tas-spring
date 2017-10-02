@@ -63,5 +63,5 @@ public class AppConstant {
     /**
      *<b>CONSTANT VALUE :</b> Value for bcrypt strength.
      */
-    public static final int BCRYPT_STRENGTH = 10;
+    public static final int BCRYPT_STRENGTH = 11;
 }
