@@ -23,9 +23,9 @@ import com.mitrais.trainingadminservice.repository.EmployeeRepository;
 import com.mitrais.trainingadminservice.repository.GradeRepository;
 import com.mitrais.trainingadminservice.repository.LocationRepository;
 import com.mitrais.trainingadminservice.repository.UserRoleRepository;
-import com.mitrais.trainingadminservice.request.UserEditRequest;
-import com.mitrais.trainingadminservice.request.UserEditRequest.RoleList;
+import com.mitrais.trainingadminservice.request.UserActiveRequest;
 import com.mitrais.trainingadminservice.request.UserRequest;
+import com.mitrais.trainingadminservice.request.UserRolesRequest;
 import com.mitrais.trainingadminservice.response.GradeResponse;
 import com.mitrais.trainingadminservice.response.UserResponse;
 import java.security.SecureRandom;
@@ -135,55 +135,72 @@ public class UserController {
         
     }
     
-    @PostMapping(value = "{id}/edit")
-    public ResponseEntity editUser(@RequestBody final UserEditRequest request, @PathVariable ("id") final Long id) {
+    @PostMapping(value = "{id}/edit/active")
+    public ResponseEntity editUserStatus(@RequestBody final UserActiveRequest request, @PathVariable ("id") final Long id) {
         try {
-            Employee editData = employeeRepository.findOne(id);
-        
-            editData.setActive(request.isActive());
-
-            employeeRepository.save(editData);
-
-            List<UserRole> userRoleList = userRoleRepository.findByEmployeeId(id);
-            List<RoleList> roles = request.getRole();
-            List<Long> roleActivate = new ArrayList<>();
-            List<Long> roleExist = new ArrayList<>();
-            roles.forEach(x -> {
-                roleActivate.add(x.getRoleId());
-            });
-            if(request.isActive()) {
-                userRoleList.forEach(e -> {
-                    roleExist.add(e.getRoleId());
+            Employee data = employeeRepository.findOne(id);
+            data.setActive(request.isActive());
+            employeeRepository.save(data);
+            List<UserRole> changeRoleStatus = userRoleRepository.findByEmployeeId(id);
+            if (request.isActive()) { 
+                changeRoleStatus.forEach(e -> {
                     if(e.getRoleId() == 4){
                         e.setActive(true);
-
-                    } else if (roleActivate.contains(e.getRoleId())) {
-                        e.setActive(true);
-                    } else {
-                        e.setActive(false);
+                        userRoleRepository.save(e);
                     }
+                });
+            } else {
+                changeRoleStatus.forEach(e -> {
+                    e.setActive(false);
                     userRoleRepository.save(e);
                 });
-                roleActivate.removeAll(roleExist);
-                if(!(roleActivate.isEmpty())) {
-                        roleActivate.forEach(x -> {
-                        UserRole createRole = new UserRole();
-                        createRole.setEmployeeId(id);
-                        createRole.setRoleId(x);
-                        createRole.setActive(true);
-                        userRoleRepository.save(createRole);
-                    });
-                }
-            } else {
-                userRoleList.forEach(e -> {
-                    e.setActive(false);
-                });
             }
-
             return ResponseEntity.ok(true);
             
         } catch (Exception e) {
-            System.out.println("ERROR at \"api/secure/user/"+ id +"/edit\": " + e);
+            System.out.println("ERROR at \"api/secure/user/"+ id +"/edit/active\": " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
+    }
+    
+    @PostMapping(value = "{id}/edit/roles")
+    public ResponseEntity editUserRoles(@RequestBody final List<UserRolesRequest> request, @PathVariable ("id") final Long id) {
+        try {
+            List<UserRole> userRoleList = userRoleRepository.findByEmployeeId(id);
+            List<Long> roleActivate = new ArrayList<>();
+            List<Long> roleExist = new ArrayList<>();
+            request.forEach(e -> {
+                roleActivate.add(e.getRoleId());
+            });
+            List<Long> roleActivateCopy = roleActivate;
+            userRoleList.forEach(x -> {
+                roleActivateCopy.remove(x.getRoleId());
+            });
+            roleActivateCopy.forEach(y -> {
+                UserRole create = new UserRole(id, y, true);
+                userRoleRepository.save(create);
+            });
+            userRoleList = userRoleRepository.findByEmployeeId(id);
+            if(!(employeeRepository.findOne(id).isActive())) {
+                userRoleList.forEach(z -> {
+                    z.setActive(false);
+                    userRoleRepository.save(z);
+                });
+            } else {
+                userRoleList.forEach(z -> {
+                    if(roleActivate.contains(z.getRoleId())) {
+                        z.setActive(true);
+                    } else {
+                        z.setActive(false);
+                    }
+                    userRoleRepository.save(z);
+                });
+            }
+            
+            return ResponseEntity.ok(true);
+            
+        } catch (Exception e) {
+            System.out.println("ERROR at \"api/secure/user/"+ id +"/edit/active\": " + e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }

@@ -90,14 +90,14 @@
 			locationId	: number
 		}
 	- ..../api/secure/user/{idUser}						(get)
-	- ..../api/secure/user/{idUser}/edit/					(post)
+	- ..../api/secure/user/{idUser}/edit/active				(post)
 		{
-			active		: boolean,
-			role 		:
-					[{
-						roleId	:number
-					}]
+			active		: boolean
 		}
+	- ..../api/secure/user/{idUser}/edit/roles				(post)
+		[{
+			roleId		: number
+		}]
 	- ..../api/secure/user/trainer						(get)
 	- ..../api/secure/user/eligible/{idPeriod}				(get)
 	- ..../api/secure/user/grade						(get)

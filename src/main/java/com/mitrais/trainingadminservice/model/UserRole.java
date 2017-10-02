@@ -31,6 +31,15 @@ public class UserRole {
     private Long roleId;
     private boolean active;
 
+    public UserRole(Long employeeId, Long roleId, boolean active) {
+        this.employeeId = employeeId;
+        this.roleId = roleId;
+        this.active = active;
+    }
+
+    public UserRole() {
+    }
+
     public Long getUserRoleId() {
         return userRoleId;
     }
