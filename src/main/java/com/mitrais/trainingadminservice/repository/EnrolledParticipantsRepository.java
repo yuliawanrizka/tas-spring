@@ -25,4 +25,5 @@ import org.springframework.stereotype.Component;
 @Component
 public interface EnrolledParticipantsRepository extends JpaRepository<EnrolledParticipants, Long> {
     List<EnrolledParticipants> findByCoursePeriodId(Long coursePeriodId);
+    List<EnrolledParticipants> findByEligibleParticipantsId(Long eligibleParticipantsId);
 }
