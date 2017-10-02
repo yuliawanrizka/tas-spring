@@ -65,7 +65,7 @@ public class AuthenticationController {
         String[] split = employee.getPassword().split("\\$");
         int currentStrength = Integer.parseInt(split[2]);
         
-            if (bcrypt.matches(password, employee.getPassword())) {
+            if (bcrypt.matches(password, employee.getPassword()) && employee.isActive()) {
                 if(currentStrength < AppConstant.BCRYPT_STRENGTH) {
                     employee.setPassword(bcrypt.encode(password));
                     employeeRepository.save(employee);
@@ -102,7 +102,9 @@ public class AuthenticationController {
         List<UserRole> userRole = userRoleRepository.findByEmployeeId(id);
         List<Long> x = new ArrayList<>();
         userRole.forEach(role -> {
-            x.add(role.getRoleId());
+            if(role.isActive()) {
+                x.add(role.getRoleId());
+            }
         });
         return x;
     }

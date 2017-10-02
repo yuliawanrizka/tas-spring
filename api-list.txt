@@ -105,9 +105,7 @@
 
 
 # ENROLLMENT
-	- ..../api/secure/enrollment						(get)	*
-
-
+	- ..../api/secure/enrollment						(get)
 
 # ACHIEVEMENT
 	- ..../api/secure/achievement						(get)	*

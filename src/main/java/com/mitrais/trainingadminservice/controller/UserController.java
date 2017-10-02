@@ -30,6 +30,7 @@ import com.mitrais.trainingadminservice.response.GradeResponse;
 import com.mitrais.trainingadminservice.response.UserResponse;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +100,7 @@ public class UserController {
             addData.setPassword(creator.encode(request.getPassword()));
             addData.setFullName(request.getFullName());
             addData.setGradeId(request.getGradeId());
-            addData.setStream(addData.getStream());
+            addData.setStream(request.getStream());
             addData.setEmail(request.getEmail());
             addData.setActive(true);
             addData.setLocationId(request.getLocationId());
@@ -107,13 +108,21 @@ public class UserController {
             employeeRepository.save(addData);
             
             Employee dataSaved = employeeRepository.findByAccountName("mitrais\\" +request.getAccountName());
-            UserRole settingRole = new UserRole();
             
-            settingRole.setEmployeeId(dataSaved.getEmployeeId());
-            settingRole.setRoleId(new Long("4"));
+            for(long i = 1; i <= 4; i++) {
+                UserRole settingRole = new UserRole();
             
-            userRoleRepository.save(settingRole);
-
+                settingRole.setEmployeeId(dataSaved.getEmployeeId());
+                settingRole.setRoleId(i);
+                if(i == 4) {
+                    settingRole.setActive(true);
+                } else {
+                    settingRole.setActive(false);
+                }
+                
+                userRoleRepository.save(settingRole);
+            }
+            
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             System.out.println("ERROR at \"api/secure/user/add\": " + e);
@@ -142,7 +151,7 @@ public class UserController {
             data.setActive(request.isActive());
             employeeRepository.save(data);
             List<UserRole> changeRoleStatus = userRoleRepository.findByEmployeeId(id);
-            if (request.isActive()) { 
+            if (data.isActive()) { 
                 changeRoleStatus.forEach(e -> {
                     if(e.getRoleId() == 4){
                         e.setActive(true);
@@ -166,37 +175,17 @@ public class UserController {
     @PostMapping(value = "{id}/edit/roles")
     public ResponseEntity editUserRoles(@RequestBody final List<UserRolesRequest> request, @PathVariable ("id") final Long id) {
         try {
-            List<UserRole> userRoleList = userRoleRepository.findByEmployeeId(id);
-            List<Long> roleActivate = new ArrayList<>();
-            request.forEach(e -> {
-                roleActivate.add(e.getRoleId());
-            });
-            List<Long> roleActivateCopy = roleActivate;
-            userRoleList.forEach(x -> {
-                roleActivateCopy.remove(x.getRoleId());
-            });
-            roleActivateCopy.forEach(y -> {
-                UserRole create = new UserRole(id, y, true);
-                userRoleRepository.save(create);
-            });
-            userRoleList = userRoleRepository.findByEmployeeId(id);
-            if(!(employeeRepository.findOne(id).isActive())) {
-                userRoleList.forEach(z -> {
-                    z.setActive(false);
-                    userRoleRepository.save(z);
-                });
-            } else {
-                userRoleList.forEach(z -> {
-                    if(roleActivate.contains(z.getRoleId())) {
-                        z.setActive(true);
-                    } else {
-                        z.setActive(false);
-                    }
-                    userRoleRepository.save(z);
-                });
-            }
-            
-            return ResponseEntity.ok(true);
+           List<UserRole> roleList = userRoleRepository.findByEmployeeId(id);
+           roleList.forEach(e -> {
+               e.setActive(false);
+               request.forEach(x -> {
+                   if(e.getRoleId().equals(x.getRoleId())) {
+                       e.setActive(true);
+                   }
+               });
+               userRoleRepository.save(e);
+           });
+           return ResponseEntity.ok(true);
             
         } catch (Exception e) {
             System.out.println("ERROR at \"api/secure/user/"+ id +"/edit/active\": " + e);
@@ -237,7 +226,7 @@ public class UserController {
             employeeList.forEach(e -> {
                 List<UserRole> roleList = userRoleRepository.findByEmployeeId(e.getEmployeeId());
                 roleList.forEach(x -> {
-                    if(x.getRoleId() == 2) {
+                    if(x.getRoleId() == 2 && x.isActive()) {
                         response.add(generateUserResponse(e));
                     }
                 });
@@ -312,8 +301,11 @@ public class UserController {
         List<UserRole> userRole = userRoleRepository.findByEmployeeId(id);
         List<Long> x = new ArrayList<>();
         userRole.forEach(role -> {
-            x.add(role.getRoleId());
+            if(role.isActive()) {
+                x.add(role.getRoleId());
+            }
         });
+        Collections.sort(x);
         return x;
     }
 
