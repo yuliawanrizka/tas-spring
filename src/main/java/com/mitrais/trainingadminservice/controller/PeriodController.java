@@ -273,10 +273,9 @@ public class PeriodController {
                 List<UserRole> backupTrainerRoleList = userRoleRepository.findByEmployeeId(request.getBackupTrainerId());
                 backupTrainerRoleList.forEach(e -> {
                 if(e.getRoleId() == 2) {
-                    data.setMainTrainer(e.getUserRoleId());
+                    data.setBackupTrainer(e.getUserRoleId());
                 }
-            });
-                data.setBackupTrainer(request.getBackupTrainerId());
+                });
             }
             
             data.setClassroomId(request.getClassroomId());

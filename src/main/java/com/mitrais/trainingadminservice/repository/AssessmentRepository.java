@@ -13,6 +13,7 @@
 package com.mitrais.trainingadminservice.repository;
 
 import com.mitrais.trainingadminservice.model.Assessment;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -23,5 +24,5 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public interface AssessmentRepository extends JpaRepository<Assessment, Long> {
-
+    List<Assessment> findByCoursePeriodId(Long coursePeriodId);
 }
