@@ -114,7 +114,12 @@
 
 # TRAINING MAINTENANCE
 
-	- ..../api/secure/maintenance						(post)	*
-		{
-			activeRole	: number
-		}
+	- ..../api/secure/maintenance/{activeRole}				(get)
+	- ..../api/secure/maintenance/{idCoursePeriod}/assessment		(get)
+	- ..../api/secure/maintenance/{idCoursePeriod}/assessment/edit		(post)
+		[{
+			enrolledId	: number,
+			pass		: boolean
+		}]
+	- ..../api/secure/maintenance/{idCoursePeriod}/attendance		(get)	*
+	- ..../api/secure/maintenance/{idCoursePeriod}/attendance/edit		(post)	*

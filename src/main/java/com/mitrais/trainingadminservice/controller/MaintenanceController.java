@@ -27,7 +27,7 @@ import com.mitrais.trainingadminservice.repository.EnrolledParticipantsRepositor
 import com.mitrais.trainingadminservice.repository.LocationRepository;
 import com.mitrais.trainingadminservice.repository.TrainingPeriodRepository;
 import com.mitrais.trainingadminservice.repository.UserRoleRepository;
-import com.mitrais.trainingadminservice.request.ActiveRoleRequest;
+import com.mitrais.trainingadminservice.request.AssessmentRequest;
 import com.mitrais.trainingadminservice.response.AssessmentResponse;
 import com.mitrais.trainingadminservice.response.MaintenanceResponse;
 import io.jsonwebtoken.Claims;
@@ -77,10 +77,10 @@ public class MaintenanceController {
     
     private HashMap<Long,String> classroomList = new HashMap<>();
     
-    @PostMapping(value = "")
-    public ResponseEntity getTrainingMaintenance(@RequestBody final ActiveRoleRequest request, @RequestAttribute final Claims claims) {
+    @GetMapping(value = "{activeRole}")
+    public ResponseEntity getTrainingMaintenance(@PathVariable ("activeRole") final Long activeRole, @RequestAttribute final Claims claims) {
         try {
-            UserRole validate = userRoleRepository.findByEmployeeIdAndRoleId(new Long(claims.get("userId").toString()), request.getActiveRole());
+            UserRole validate = userRoleRepository.findByEmployeeIdAndRoleId(new Long(claims.get("userId").toString()), activeRole);
             List<MaintenanceResponse> response = new ArrayList<>();
             if(validate.isActive() && (validate.getRoleId() == 1 || validate.getRoleId() == 2) ) {
                 List<CoursePeriod> data;
@@ -96,29 +96,53 @@ public class MaintenanceController {
             }
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            System.out.println("ERROR at \"api/secure/maintenance/\": " + e);
+            System.out.println("ERROR at \"api/secure/maintenance/"+activeRole+"\": " + e);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
     }
     
     @GetMapping(value = "{id}/assessment")
     public ResponseEntity getAssessment(@PathVariable ("id") final Long id) {
-        List<EnrolledParticipants> enrolledData = enrolledParticipantsRepository.findByCoursePeriodId(id);
-        List<Assessment> assessmentData = assessmentRepository.findByCoursePeriodId(id);
-        List<AssessmentResponse> response = new ArrayList<>();
-        enrolledData.forEach(e -> {
-            AssessmentResponse dataForResponse = new AssessmentResponse();
-            dataForResponse.setId(e.getEnrolledParticipantsId());
-            dataForResponse.setEmployeeName(getEmployeeFullName(eligibleParticipantsRepository.findOne(e.getEligibleParticipantsId()).getUserRoleId()));
-            dataForResponse.setStatus(null);
-            assessmentData.forEach(n -> {
-                if(n.getEnrolledParticipantsId().equals(e.getEnrolledParticipantsId())) {
-                    dataForResponse.setStatus(n.isPass());
-                }
+        try {
+            List<EnrolledParticipants> enrolledData = enrolledParticipantsRepository.findByCoursePeriodId(id);
+            List<Assessment> assessmentData = assessmentRepository.findByCoursePeriodId(id);
+            List<AssessmentResponse> response = new ArrayList<>();
+            enrolledData.forEach(e -> {
+                AssessmentResponse dataForResponse = new AssessmentResponse();
+                dataForResponse.setId(e.getEnrolledParticipantsId());
+                dataForResponse.setEmployeeName(getEmployeeFullName(eligibleParticipantsRepository.findOne(e.getEligibleParticipantsId()).getUserRoleId()));
+                dataForResponse.setStatus(null);
+                assessmentData.forEach(n -> {
+                    if(n.getEnrolledParticipantsId().equals(e.getEnrolledParticipantsId())) {
+                        dataForResponse.setStatus(n.isPass());
+                    }
+                });
+                response.add(dataForResponse);
             });
-            response.add(dataForResponse);
-        });
-        return ResponseEntity.ok(response);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.out.println("ERROR at \"api/secure/maintenance/"+id+"/assessment\": " + e);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+    }
+    @PostMapping(value = "{id}/assessment/edit")
+    public ResponseEntity editAssessment(@RequestBody final List<AssessmentRequest> request, @PathVariable("id") final Long id) { 
+        try {
+            request.forEach(e -> {
+            Assessment data = assessmentRepository.findByCoursePeriodIdAndEnrolledParticipantsId(id, e.getEnrolledId());
+            data.setCoursePeriodId(id);
+            data.setEnrolledParticipantsId(e.getEnrolledId());
+            data.setPass(e.isPass());
+            assessmentRepository.save(data);
+            });
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            System.out.println("ERROR at \"api/secure/maintenance/"+id+"/assessment\": " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
+        
+        
+        
     }
     
     private MaintenanceResponse generateMaintenanceResponse(CoursePeriod e){
