@@ -263,8 +263,19 @@ public class PeriodController {
             
             data.setCourseId(request.getCourseId());
             data.setTrainingPeriodId(id);
-            data.setMainTrainer(request.getMainTrainerId());
+            List<UserRole> mainTrainerRoleList = userRoleRepository.findByEmployeeId(request.getMainTrainerId());
+            mainTrainerRoleList.forEach(e -> {
+                if(e.getRoleId() == 2) {
+                    data.setMainTrainer(e.getUserRoleId());
+                }
+            });
             if(request.getBackupTrainerId() != null){
+                List<UserRole> backupTrainerRoleList = userRoleRepository.findByEmployeeId(request.getBackupTrainerId());
+                backupTrainerRoleList.forEach(e -> {
+                if(e.getRoleId() == 2) {
+                    data.setMainTrainer(e.getUserRoleId());
+                }
+            });
                 data.setBackupTrainer(request.getBackupTrainerId());
             }
             

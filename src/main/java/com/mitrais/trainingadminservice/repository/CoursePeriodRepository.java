@@ -25,4 +25,5 @@ import org.springframework.stereotype.Component;
 @Component
 public interface CoursePeriodRepository extends JpaRepository<CoursePeriod, Long> {
     List<CoursePeriod> findByTrainingPeriodId (Long trainingPeriodId);
+    List<CoursePeriod> findByMainTrainerOrBackupTrainer (Long mainTrainer, Long backupTrainer);
 }

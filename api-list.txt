@@ -59,7 +59,7 @@
 			classroomId	: number,
 			capacity	: number
 		}
-	- ..../api/secure/period/{idPeriod}/course/{coursePeriodId}/edit				(post)
+	- ..../api/secure/period/{idPeriod}/course/{coursePeriodId}/edit	(post)
 		{
 			startDate	: Date,		(optional)
 			endDate		: Date,		(optional)
@@ -114,4 +114,7 @@
 
 # TRAINING MAINTENANCE
 
-	- ..../api/secure/maintenance						(get)	*
+	- ..../api/secure/maintenance						(post)	*
+		{
+			activeRole	: number
+		}
