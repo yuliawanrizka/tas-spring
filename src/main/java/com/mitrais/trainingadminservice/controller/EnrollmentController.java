@@ -77,10 +77,10 @@ public class EnrollmentController {
                             data.setTrainingName(periodData.getTrainingName());
                             data.setCourseName(courseRepository.findOne(cpData.getCourseId()).getCourseName());
                             if(cpData.getBackupTrainer() == null) {
-                                data.setTrainerName(employeeRepository.findOne(cpData.getMainTrainer()).getFullName());
+                                data.setTrainerName(employeeRepository.findOne(userRoleRepository.findOne(cpData.getMainTrainer()).getEmployeeId()).getFullName());
                             } else {
-                                data.setTrainerName(employeeRepository.findOne(cpData.getMainTrainer()).getFullName()
-                                        + "/" +employeeRepository.findOne(cpData.getBackupTrainer()).getFullName()
+                                data.setTrainerName(employeeRepository.findOne(userRoleRepository.findOne(cpData.getMainTrainer()).getEmployeeId()).getFullName()
+                                        + "/" +employeeRepository.findOne(userRoleRepository.findOne(cpData.getBackupTrainer()).getEmployeeId()).getFullName()
                                 );
                             }
                             data.setStartAt(periodData.getStartDate().toString());
