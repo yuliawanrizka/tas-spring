@@ -13,11 +13,14 @@
 package com.mitrais.trainingadminservice.controller;
 
 import com.mitrais.trainingadminservice.model.Assessment;
+import com.mitrais.trainingadminservice.model.Attendance;
 import com.mitrais.trainingadminservice.model.CoursePeriod;
 import com.mitrais.trainingadminservice.model.EnrolledParticipants;
+import com.mitrais.trainingadminservice.model.Schedule;
 import com.mitrais.trainingadminservice.model.TrainingPeriod;
 import com.mitrais.trainingadminservice.model.UserRole;
 import com.mitrais.trainingadminservice.repository.AssessmentRepository;
+import com.mitrais.trainingadminservice.repository.AttendanceRepository;
 import com.mitrais.trainingadminservice.repository.ClassroomRepository;
 import com.mitrais.trainingadminservice.repository.CoursePeriodRepository;
 import com.mitrais.trainingadminservice.repository.CourseRepository;
@@ -25,11 +28,15 @@ import com.mitrais.trainingadminservice.repository.EligibleParticipantsRepositor
 import com.mitrais.trainingadminservice.repository.EmployeeRepository;
 import com.mitrais.trainingadminservice.repository.EnrolledParticipantsRepository;
 import com.mitrais.trainingadminservice.repository.LocationRepository;
+import com.mitrais.trainingadminservice.repository.ScheduleRepository;
 import com.mitrais.trainingadminservice.repository.TrainingPeriodRepository;
 import com.mitrais.trainingadminservice.repository.UserRoleRepository;
 import com.mitrais.trainingadminservice.request.AssessmentRequest;
+import com.mitrais.trainingadminservice.request.AttendanceRequest;
 import com.mitrais.trainingadminservice.response.AssessmentResponse;
+import com.mitrais.trainingadminservice.response.AttendanceResponse;
 import com.mitrais.trainingadminservice.response.MaintenanceResponse;
+import com.mitrais.trainingadminservice.response.ScheduleListResponse;
 import io.jsonwebtoken.Claims;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,7 +81,11 @@ public class MaintenanceController {
     private EligibleParticipantsRepository eligibleParticipantsRepository;
     @Autowired
     private AssessmentRepository assessmentRepository;
-    
+    @Autowired
+    private ScheduleRepository scheduleRepository;
+    @Autowired
+    private AttendanceRepository attendanceRepository;
+
     private HashMap<Long,String> classroomList = new HashMap<>();
     
     @GetMapping(value = "{activeRole}")
@@ -91,7 +102,9 @@ public class MaintenanceController {
                     data = coursePeriodRepository.findAll();
                 }
                 data.forEach(e -> {
-                    response.add(generateMaintenanceResponse(e));
+                    if(e.isPeriodical() != null) {
+                        response.add(generateMaintenanceResponse(e));
+                    }
                 });
             }
             return ResponseEntity.ok(response);
@@ -129,34 +142,91 @@ public class MaintenanceController {
     public ResponseEntity editAssessment(@RequestBody final List<AssessmentRequest> request, @PathVariable("id") final Long id) { 
         try {
             request.forEach(e -> {
-            Assessment data = assessmentRepository.findByCoursePeriodIdAndEnrolledParticipantsId(id, e.getEnrolledId());
-            data.setCoursePeriodId(id);
-            data.setEnrolledParticipantsId(e.getEnrolledId());
-            data.setPass(e.isPass());
-            assessmentRepository.save(data);
+                Assessment data = assessmentRepository.findByCoursePeriodIdAndEnrolledParticipantsId(id, e.getEnrolledId());
+                data.setCoursePeriodId(id);
+                data.setEnrolledParticipantsId(e.getEnrolledId());
+                data.setPass(e.isPass());
+                assessmentRepository.save(data);
             });
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             System.out.println("ERROR at \"api/secure/maintenance/"+id+"/assessment\": " + e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
-        
-        
-        
+    }
+    @GetMapping(value = "{id}/attendance")
+    public ResponseEntity getSchedule(@PathVariable ("id") final Long id) {
+        try {
+            List<Schedule> data = scheduleRepository.findByCoursePeriodId(id);
+            List<ScheduleListResponse> response = new ArrayList<>();
+            data.forEach(e -> {
+                ScheduleListResponse dataForResponse = new ScheduleListResponse();
+                dataForResponse.setScheduleId(e.getScheduleId());
+                dataForResponse.setDateAndTime(
+                        e.getStartDate().toString() + " " + e.getStartTime() + " - " +
+                                e.getEndDate().toString() + " " + e.getEndTime()
+                );
+                response.add(dataForResponse);
+            });
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.out.println("ERROR at \"api/secure/maintenance/"+id+"/attendance\": " + e);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+    }
+    
+    @GetMapping(value = "{id}/attendance/{idSchedule}")
+    public ResponseEntity getAttendance(@PathVariable ("id") final Long id, @PathVariable ("idSchedule") final Long idSchedule) {
+        try {
+            
+            List<AttendanceResponse> response = new ArrayList<>();
+            List<Attendance> attendanceData = attendanceRepository.findByScheduleId(idSchedule);
+            List<EnrolledParticipants> enrolledData = enrolledParticipantsRepository.findByCoursePeriodId(id);
+            if(scheduleRepository.findByScheduleIdAndCoursePeriodId(idSchedule, id) != null) {
+                enrolledData.forEach(e -> {
+                    AttendanceResponse dataForResponse = new AttendanceResponse();
+                    dataForResponse.setId(e.getEnrolledParticipantsId());
+                    dataForResponse.setEmployeeName(getEmployeeFullName(eligibleParticipantsRepository.findOne(e.getEligibleParticipantsId()).getUserRoleId()));
+                    dataForResponse.setAttendanceStatus(null);
+                    attendanceData.forEach(n ->{
+                        if(n.getEnrolledParticipantsId().equals(e.getEnrolledParticipantsId())) {
+                            dataForResponse.setAttendanceStatus(n.getAttendanceStatus());
+                        }
+                    });
+                    response.add(dataForResponse);
+                });
+            }
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.out.println("ERROR at \"api/secure/maintenance/"+id+"/attendance"+idSchedule+"\": " + e);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+    }
+    
+    @PostMapping(value = "{id}/attendance/{idSchedule}/edit")
+    public ResponseEntity editAttendance(@RequestBody final List<AttendanceRequest> request, @PathVariable ("id") final Long id, @PathVariable ("idSchedule") final Long idSchedule) {
+        try {
+            request.forEach(e -> {
+                Attendance data = attendanceRepository.findByScheduleIdAndEnrolledParticipantsId(idSchedule, e.getEnrolledId());
+                data.setScheduleId(idSchedule);
+                data.setEnrolledParticipantsId(e.getEnrolledId());
+                data.setAttendanceStatus(e.getStatus());
+                attendanceRepository.save(data);
+            });
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            System.out.println("ERROR at \"api/secure/maintenance/"+id+"/assessment"+idSchedule+"/edit\": " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
     }
     
     private MaintenanceResponse generateMaintenanceResponse(CoursePeriod e){
         MaintenanceResponse dataForResponse = new MaintenanceResponse();
         TrainingPeriod trainingPeriodData = trainingPeriodRepository.findOne(e.getTrainingPeriodId());
-        dataForResponse.setScheduleId(e.getCoursePeriodId());
+        dataForResponse.setCoursePeriodId(e.getCoursePeriodId());
         dataForResponse.setPeriodName(trainingPeriodData.getTrainingName());
         dataForResponse.setCourseName(courseRepository.findOne(e.getCourseId()).getCourseName());
-        if(e.getBackupTrainer() == null) {
-            dataForResponse.setTrainer(employeeRepository.findOne(userRoleRepository.findOne(e.getMainTrainer()).getEmployeeId()).getFullName());
-        } else {
-            dataForResponse.setTrainer(getEmployeeFullName(e.getMainTrainer())
-            +"/"+ getEmployeeFullName(e.getBackupTrainer()));
-        }
+        dataForResponse.setTrainer(employeeRepository.findOne(userRoleRepository.findOne(e.getMainTrainer()).getEmployeeId()).getFullName());
         if (classroomList.isEmpty() || !(classroomList.containsKey(e.getClassroomId()))) {
             classroomList.put(e.getClassroomId(),
                     classroomRepository.findOne(e.getClassroomId()).getClassroom() 
@@ -165,9 +235,7 @@ public class MaintenanceController {
         }
         dataForResponse.setClassroom(classroomList.get(e.getClassroomId()));
         
-        if(e.isPeriodical() == null) {
-            dataForResponse.setScheduleType("-");
-        } else if(e.isPeriodical()) {
+        if(e.isPeriodical()) {
             dataForResponse.setScheduleType("Periodical");
         } else {
             dataForResponse.setScheduleType("Fixed");

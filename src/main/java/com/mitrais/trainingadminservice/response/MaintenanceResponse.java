@@ -19,7 +19,7 @@ package com.mitrais.trainingadminservice.response;
  */
 public class MaintenanceResponse {
 
-    private Long scheduleId;
+    private Long coursePeriodId;
     private String periodName;
     private String courseName;
     private String trainer;
@@ -29,12 +29,12 @@ public class MaintenanceResponse {
     private String endDate;
     private int numberOfParticipants;
 
-    public Long getScheduleId() {
-        return scheduleId;
+    public Long getCoursePeriodId() {
+        return coursePeriodId;
     }
 
-    public void setScheduleId(Long scheduleId) {
-        this.scheduleId = scheduleId;
+    public void setCoursePeriodId(Long coursePeriodId) {
+        this.coursePeriodId = coursePeriodId;
     }
 
     public String getPeriodName() {

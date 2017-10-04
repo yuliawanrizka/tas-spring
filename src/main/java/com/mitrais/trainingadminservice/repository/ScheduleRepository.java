@@ -24,5 +24,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
+    Schedule findByScheduleIdAndCoursePeriodId(Long scheduleId, Long coursePeriodId);
     List<Schedule> findByCoursePeriodId(Long coursePeriodId);
 }

@@ -13,6 +13,7 @@
 package com.mitrais.trainingadminservice.repository;
 
 import com.mitrais.trainingadminservice.model.Attendance;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -23,5 +24,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
-
+    List<Attendance> findByScheduleId(Long scheduleId);
+    Attendance findByScheduleIdAndEnrolledParticipantsId(Long scheduleId, Long enrolledParticipantsId);
 }
