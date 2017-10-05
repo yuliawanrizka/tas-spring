@@ -93,25 +93,53 @@ public class DashboardController {
                 BccResponse dataForResponse = trainerData.get(data.getMainTrainer());
                 switch (data.getDayOfTraining()) {
                     case 1 :
-                    dataForResponse.setSunday(generateSchedule(data, e));
+                    if(dataForResponse.getSunday().equals("-")) {
+                        dataForResponse.setSunday(generateSchedule(data, e));
+                    } else {
+                        dataForResponse.setSunday(dataForResponse.getSunday() +" & " +generateSchedule(data, e));
+                    }
                     break;
                     case 2 :
-                    dataForResponse.setMonday(generateSchedule(data, e)); 
+                    if(dataForResponse.getMonday().equals("-")) {
+                        dataForResponse.setMonday(generateSchedule(data, e));
+                    } else {
+                        dataForResponse.setMonday(dataForResponse.getMonday() +" & " +generateSchedule(data, e));
+                    } 
                     break;
                     case 3 :
-                    dataForResponse.setTuesday(generateSchedule(data, e)); 
+                    if(dataForResponse.getTuesday().equals("-")) {
+                        dataForResponse.setTuesday(generateSchedule(data, e));
+                    } else {
+                        dataForResponse.setTuesday(dataForResponse.getTuesday() +" & " +generateSchedule(data, e));
+                    }
                     break;
                     case 4 :
-                    dataForResponse.setWednesday(generateSchedule(data, e)); 
+                    if(dataForResponse.getWednesday().equals("-")) {
+                        dataForResponse.setWednesday(generateSchedule(data, e));
+                    } else {
+                        dataForResponse.setWednesday(dataForResponse.getWednesday() +" & " +generateSchedule(data, e));
+                    } 
                     break;
                     case 5 :
-                    dataForResponse.setThursday(generateSchedule(data, e)); 
+                    if(dataForResponse.getThursday().equals("-")) {
+                        dataForResponse.setThursday(generateSchedule(data, e));
+                    } else {
+                        dataForResponse.setThursday(dataForResponse.getThursday() +" & " +generateSchedule(data, e));
+                    }
                     break;
                     case 6 :
-                    dataForResponse.setFriday(generateSchedule(data, e)); 
+                    if(dataForResponse.getFriday().equals("-")) {
+                        dataForResponse.setFriday(generateSchedule(data, e));
+                    } else {
+                        dataForResponse.setFriday(dataForResponse.getFriday() +" & " +generateSchedule(data, e));
+                    }
                     break;
                     case 7 :
-                    dataForResponse.setSaturday(generateSchedule(data, e)); 
+                    if(dataForResponse.getSaturday().equals("-")) {
+                        dataForResponse.setSaturday(generateSchedule(data, e));
+                    } else {
+                        dataForResponse.setSaturday(dataForResponse.getSaturday() +" & " +generateSchedule(data, e));
+                    } 
                     break;
                 }
             }
@@ -119,7 +147,6 @@ public class DashboardController {
         List<BccResponse> response = new ArrayList<>(trainerData.values());
         return ResponseEntity.ok(response);
     }
-    
     private String generateSchedule(CoursePeriod data , Schedule e) {
         String result;
         if (classroomList.isEmpty() || !(classroomList.containsKey(data.getClassroomId()))) {
