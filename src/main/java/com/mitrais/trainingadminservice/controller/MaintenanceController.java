@@ -143,10 +143,17 @@ public class MaintenanceController {
         try {
             request.forEach(e -> {
                 Assessment data = assessmentRepository.findByCoursePeriodIdAndEnrolledParticipantsId(id, e.getEnrolledId());
-                data.setCoursePeriodId(id);
-                data.setEnrolledParticipantsId(e.getEnrolledId());
-                data.setPass(e.isPass());
-                assessmentRepository.save(data);
+                if(data == null) {
+                    Assessment createNew = new Assessment();
+                    createNew.setCoursePeriodId(id);
+                    createNew.setEnrolledParticipantsId(e.getEnrolledId());
+                    createNew.setPass(e.isPass());
+                    assessmentRepository.save(createNew);
+                } else {
+                    data.setPass(e.isPass());
+                    assessmentRepository.save(data);
+                }
+                
             });
             return ResponseEntity.ok(true);
         } catch (Exception e) {

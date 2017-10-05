@@ -13,6 +13,7 @@
 package com.mitrais.trainingadminservice.repository;
 
 import com.mitrais.trainingadminservice.model.Schedule;
+import java.sql.Date;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -26,4 +27,5 @@ import org.springframework.stereotype.Component;
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     Schedule findByScheduleIdAndCoursePeriodId(Long scheduleId, Long coursePeriodId);
     List<Schedule> findByCoursePeriodId(Long coursePeriodId);
+    List<Schedule> findByStartDateBetween(Date dateBegin, Date dateEnd);
 }

@@ -108,8 +108,9 @@
 	- ..../api/secure/enrollment							(get)
 
 # ACHIEVEMENT
-	- ..../api/secure/achievement/{activeRole}					(get)	*
-
+	- ..../api/secure/achievement/{activeRole}					(get)
+	- 
+..../api/secure/achievement/edit						(get)
 
 
 # TRAINING MAINTENANCE
