@@ -108,7 +108,7 @@
 	- ..../api/secure/enrollment							(get)
 
 # ACHIEVEMENT
-	- ..../api/secure/achievement							(get)	*
+	- ..../api/secure/achievement/{activeRole}					(get)	*
 
 
 

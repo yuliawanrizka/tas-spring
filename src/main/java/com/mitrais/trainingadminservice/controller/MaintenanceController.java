@@ -163,8 +163,8 @@ public class MaintenanceController {
                 ScheduleListResponse dataForResponse = new ScheduleListResponse();
                 dataForResponse.setScheduleId(e.getScheduleId());
                 dataForResponse.setDateAndTime(
-                        e.getStartDate().toString() + " " + e.getStartTime() + " - " +
-                                e.getEndDate().toString() + " " + e.getEndTime()
+                        e.getStartDate().toString() + " (" + e.getStartTime() + ") - " +
+                                e.getEndDate().toString() + " (" + e.getEndTime() + ")"
                 );
                 response.add(dataForResponse);
             });
@@ -208,14 +208,20 @@ public class MaintenanceController {
         try {
             request.forEach(e -> {
                 Attendance data = attendanceRepository.findByScheduleIdAndEnrolledParticipantsId(idSchedule, e.getEnrolledId());
-                data.setScheduleId(idSchedule);
-                data.setEnrolledParticipantsId(e.getEnrolledId());
-                data.setAttendanceStatus(e.getStatus());
-                attendanceRepository.save(data);
+                if(data == null) {
+                    Attendance createnew = new Attendance();
+                    createnew.setScheduleId(idSchedule);
+                    createnew.setEnrolledParticipantsId(e.getEnrolledId());
+                    createnew.setAttendanceStatus(e.getStatus());
+                    attendanceRepository.save(createnew);
+                } else {
+                    data.setAttendanceStatus(e.getStatus());
+                    attendanceRepository.save(data);
+                }
             });
             return ResponseEntity.ok(true);
         } catch (Exception e) {
-            System.out.println("ERROR at \"api/secure/maintenance/"+id+"/assessment"+idSchedule+"/edit\": " + e);
+            System.out.println("ERROR at \"api/secure/maintenance/"+id+"/attendance/"+idSchedule+"/edit\": " + e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }

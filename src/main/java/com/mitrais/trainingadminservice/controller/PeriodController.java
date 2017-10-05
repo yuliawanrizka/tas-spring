@@ -301,7 +301,7 @@ public class PeriodController {
     @PostMapping(value = "{id}/course/{idCoursePeriod}/edit")
     public ResponseEntity editCoursePeriod(@RequestBody final CoursePeriodRequest request, @PathVariable ("id") Long id, @RequestAttribute Claims claims, @PathVariable ("idCoursePeriod") Long idCoursePeriod) {
         try {
-                editCoursePeriodData(request, new Long(claims.get("userId").toString()), id, idCoursePeriod);
+            editCoursePeriodData(request, new Long(claims.get("userId").toString()), id, idCoursePeriod);
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             System.out.println("ERROR at \"api/secure/"+id+"/period/add\": " + e);
