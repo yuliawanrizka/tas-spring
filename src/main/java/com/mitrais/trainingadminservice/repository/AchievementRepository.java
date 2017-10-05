@@ -25,4 +25,5 @@ import org.springframework.stereotype.Component;
 @Component
 public interface AchievementRepository extends JpaRepository<Achievement, Long> {
     List<Achievement> findByUserRoleId(Long userRoleId);
+    Achievement findByUserRoleIdAndCourseId(Long userRoleId, Long courseId);
 }

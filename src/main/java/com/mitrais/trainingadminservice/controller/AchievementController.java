@@ -22,15 +22,33 @@ import com.mitrais.trainingadminservice.repository.GradeRepository;
 import com.mitrais.trainingadminservice.repository.LocationRepository;
 import com.mitrais.trainingadminservice.repository.TrainingPeriodRepository;
 import com.mitrais.trainingadminservice.repository.UserRoleRepository;
+import com.mitrais.trainingadminservice.request.AchievementRequest;
 import com.mitrais.trainingadminservice.response.AchievementResponse;
 import io.jsonwebtoken.Claims;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import jxl.Workbook;
+import jxl.format.Alignment;
+import jxl.format.Border;
+import jxl.format.BorderLineStyle;
+import jxl.format.Colour;
+import jxl.write.Label;
+import jxl.write.WritableCellFormat;
+import jxl.write.WritableFont;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -73,6 +91,20 @@ public class AchievementController {
         return ResponseEntity.ok(response);
     }
     
+    @PostMapping(value = "{id}/edit")
+    public ResponseEntity editAchievement(@RequestBody final List<AchievementRequest> request, @PathVariable ("id") final Long id) {
+        UserRole userRole = userRoleRepository.findByEmployeeIdAndRoleId(id, new Long("4"));
+        request.forEach(e -> {
+            Achievement data = achievementRepository.findByUserRoleIdAndCourseId(userRole.getUserRoleId(), e.getBccId());
+            data.setStatus(e.getStatus());
+            if(e.getStatus() == 2) {
+                data.setTerm(e.getTerm());
+            }
+            achievementRepository.save(data);
+        });
+        return ResponseEntity.ok(true);
+    }
+    
     private AchievementResponse generateAchievementResponse (Long role) {
         AchievementResponse dataForResponse = new AchievementResponse();
         
@@ -90,37 +122,58 @@ public class AchievementController {
             switch (e.getCourseId().intValue()) {
                 case 1 :
                 dataForResponse.setBegining(setAchievementValue(e));
+                dataForResponse.setBeginingId(setIdforTerm(e));
                 break;
                 case 2 :
                 dataForResponse.setLi1(setAchievementValue(e));
+                dataForResponse.setLi1Id(setIdforTerm(e));
                 break;
                 case 3 :
                 dataForResponse.setLi2(setAchievementValue(e));
+                dataForResponse.setLi2Id(setIdforTerm(e));
                 break;
                 case 4 :
                 dataForResponse.setInt1(setAchievementValue(e));
+                dataForResponse.setInt1Id(setIdforTerm(e));
                 break;
                 case 5 :
                 dataForResponse.setInt2(setAchievementValue(e));
+                dataForResponse.setInt2Id(setIdforTerm(e));
                 break;
                 case 6 :
                 dataForResponse.setBw1(setAchievementValue(e));
+                dataForResponse.setBw1Id(setIdforTerm(e));
                 break;
                 case 7 :
                 dataForResponse.setCe1(setAchievementValue(e));
+                dataForResponse.setCe1Id(setIdforTerm(e));
                 break;
                 case 8 :
                 dataForResponse.setBw2(setAchievementValue(e));
+                dataForResponse.setBw2Id(setIdforTerm(e));
                 break;
                 case 9 :
                 dataForResponse.setCe2(setAchievementValue(e));
+                dataForResponse.setCe2Id(setIdforTerm(e));
                 break;
                 case 10 :
                 dataForResponse.setPresentationSkill(setAchievementValue(e));
+                dataForResponse.setPresentationSkillId(setIdforTerm(e));
                 break;                
             } 
         });
         return dataForResponse;
+    }
+    private Long setIdforTerm (Achievement e) {
+        if(e.getStatus() != null) {
+            if(e.getStatus() == 1) {
+                return new Long("0");
+            } else {
+                return e.getTerm();
+            }
+        } else {
+            return null;
+        }
     }
     private String setAchievementValue (Achievement e) {
         String result = "";

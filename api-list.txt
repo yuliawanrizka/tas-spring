@@ -109,7 +109,12 @@
 # ACHIEVEMENT
 	- ..../api/secure/achievement/{activeRole}					(get)
 	- 
-..../api/secure/achievement/edit						(post)	*
+..../api/secure/achievement/{idUser}/edit					(post)
+		[{
+			bccId		: number,
+			status		: number,
+			term		: number,
+		}]
 
 # TRAINING MAINTENANCE
 

@@ -12,11 +12,13 @@
 
 package com.mitrais.trainingadminservice.controller;
 
+import com.mitrais.trainingadminservice.model.Assessment;
 import com.mitrais.trainingadminservice.model.CoursePeriod;
 import com.mitrais.trainingadminservice.model.EligibleParticipants;
 import com.mitrais.trainingadminservice.model.EnrolledParticipants;
 import com.mitrais.trainingadminservice.model.TrainingPeriod;
 import com.mitrais.trainingadminservice.model.UserRole;
+import com.mitrais.trainingadminservice.repository.AssessmentRepository;
 import com.mitrais.trainingadminservice.repository.CoursePeriodRepository;
 import com.mitrais.trainingadminservice.repository.CourseRepository;
 import com.mitrais.trainingadminservice.repository.EligibleParticipantsRepository;
@@ -59,6 +61,8 @@ public class EnrollmentController {
     private CourseRepository courseRepository;
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private AssessmentRepository assessmentRepository;
     
     @GetMapping(value = "")
     public ResponseEntity getMyEnrolled(@RequestAttribute Claims claims) {
@@ -85,7 +89,15 @@ public class EnrollmentController {
                             }
                             data.setStartAt(periodData.getStartDate().toString());
                             data.setEndAt(periodData.getEndDate().toString());
-                            data.setStatus("?");
+                            Assessment status = assessmentRepository.findByCoursePeriodIdAndEnrolledParticipantsId(y.getCoursePeriodId(), y.getEnrolledParticipantsId());
+                            if(status == null) {
+                                data.setStatus("On Progress");
+                            } else if(status.isPass()) {
+                                data.setStatus("Pass");
+                            } else {
+                                data.setStatus("Failed");
+                            }
+                            
                             response.add(data);
                         });
                     });

@@ -123,7 +123,7 @@ INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(18, 'Software Engi
 INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(19, 'Software Maintenance', 0);
 INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(20, 'Software Quality', 0);
 INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(21, 'Software Requirements', 0);
-INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(21, 'Software Testing', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(22, 'Software Testing', 0);
 
 SET IDENTITY_INSERT [Course] OFF;
 

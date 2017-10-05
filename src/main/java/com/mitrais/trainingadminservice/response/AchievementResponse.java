@@ -24,15 +24,25 @@ public class AchievementResponse {
     private String grade;
     private String office;
     private String begining;
+    private Long beginingId;
     private String li1;
+    private Long li1Id;
     private String li2;
+    private Long li2Id;
     private String int1;
+    private Long int1Id;
     private String int2;
+    private Long int2Id;
     private String bw1;
+    private Long bw1Id;
     private String ce1;
+    private Long ce1Id;
     private String bw2;
+    private Long bw2Id;
     private String ce2;
+    private Long ce2Id;
     private String presentationSkill;
+    private Long presentationSkillId;
 
     public Long getEmployeeId() {
         return employeeId;
@@ -153,5 +163,84 @@ public class AchievementResponse {
     public void setPresentationSkill(String presentationSkill) {
         this.presentationSkill = presentationSkill;
     }
-    
+
+    public Long getBeginingId() {
+        return beginingId;
+    }
+
+    public void setBeginingId(Long beginingId) {
+        this.beginingId = beginingId;
+    }
+
+    public Long getLi1Id() {
+        return li1Id;
+    }
+
+    public void setLi1Id(Long li1Id) {
+        this.li1Id = li1Id;
+    }
+
+    public Long getLi2Id() {
+        return li2Id;
+    }
+
+    public void setLi2Id(Long li2Id) {
+        this.li2Id = li2Id;
+    }
+
+    public Long getInt1Id() {
+        return int1Id;
+    }
+
+    public void setInt1Id(Long int1Id) {
+        this.int1Id = int1Id;
+    }
+
+    public Long getInt2Id() {
+        return int2Id;
+    }
+
+    public void setInt2Id(Long int2Id) {
+        this.int2Id = int2Id;
+    }
+
+    public Long getBw1Id() {
+        return bw1Id;
+    }
+
+    public void setBw1Id(Long bw1Id) {
+        this.bw1Id = bw1Id;
+    }
+
+    public Long getCe1Id() {
+        return ce1Id;
+    }
+
+    public void setCe1Id(Long ce1Id) {
+        this.ce1Id = ce1Id;
+    }
+
+    public Long getBw2Id() {
+        return bw2Id;
+    }
+
+    public void setBw2Id(Long bw2Id) {
+        this.bw2Id = bw2Id;
+    }
+
+    public Long getCe2Id() {
+        return ce2Id;
+    }
+
+    public void setCe2Id(Long ce2Id) {
+        this.ce2Id = ce2Id;
+    }
+
+    public Long getPresentationSkillId() {
+        return presentationSkillId;
+    }
+
+    public void setPresentationSkillId(Long presentationSkillId) {
+        this.presentationSkillId = presentationSkillId;
+    }
 }
