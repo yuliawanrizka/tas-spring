@@ -112,6 +112,18 @@ INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(7, 'Communicating 
 INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(8, 'Business Writing 2', 1);
 INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(9, 'Communicating Effectively 2', 1);
 INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(10, 'Presentation Skill', 1);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(11, 'Computing Foundation', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(12, 'Software Configuration Management', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(13, 'Software Construction', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(14, 'Software Design', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(15, 'Software Engineering Management', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(16, 'Software Engineering Models and Methods', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(17, 'Software Engineering Process', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(18, 'Software Engineering Professional Practice', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(19, 'Software Maintenance', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(20, 'Software Quality', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(21, 'Software Requirements', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(21, 'Software Testing', 0);
 
 SET IDENTITY_INSERT [Course] OFF;
 

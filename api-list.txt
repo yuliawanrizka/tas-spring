@@ -15,9 +15,8 @@
 
 # DASHBOARD
 
-	- ..../api/secure/dashboard/active						(get)	*
-	- ..../api/secure/dashboard/bcc							(get)	*
-
+	- ..../api/secure/dashboard/active						(get)
+	- ..../api/secure/dashboard/bcc							(get)
 
 
 # PERIOD
@@ -110,8 +109,7 @@
 # ACHIEVEMENT
 	- ..../api/secure/achievement/{activeRole}					(get)
 	- 
-..../api/secure/achievement/edit						(get)
-
+..../api/secure/achievement/edit						(post)	*
 
 # TRAINING MAINTENANCE
 
