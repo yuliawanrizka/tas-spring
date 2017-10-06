@@ -1,0 +1,134 @@
+# LOGIN
+	- ..../api/auth								(post)
+		{
+
+			username	: String,
+			password	: String,
+			rememberMe	: boolean
+
+		}
+
+
+//note: "..../api/secure/*" always need authentication header
+
+
+
+# DASHBOARD
+
+	- ..../api/secure/dashboard/active						(get)
+	- ..../api/secure/dashboard/bcc							(get)
+
+
+# PERIOD
+
+	- ..../api/secure/period							(get)
+
+	- ..../api/secure/period/add							(post)
+		{
+			trainingName	: String,
+			startDate	: Date,
+			endDate		: Date,
+			openEnrollment	: boolean,
+			periodical	: boolean
+		}
+
+	- ..../api/secure/period/{idPeriod}						(get)
+	- ..../api/secure/period/{idPeriod}/edit					(post)
+		{
+			trainingName	: String,
+			active		: boolean,
+			startDate	: Date,
+			endDate		: Date,
+			openEnrollment	: boolean
+		}
+
+	- ..../api/secure/period/{idPeriod}/delete					(delete)
+	- ..../api/secure/period/{idPeriod}/eligible					(get)
+	- ..../api/secure/period/{idPeriod}/eligible/add				(post)
+		[{
+			employeeId	: number
+		}]
+	- ..../api/secure/period/{idPeriod}/eligible/delete/{idEmployee}		(delete)
+	- ..../api/secure/period/{idPeriod}/course					(get)
+	- ..../api/secure/period/{idPeriod}/course/add					(post)
+		{
+			courseId	: number,
+   			mainTrainerId	: number,
+			backupTrainerId	: number,
+			classroomId	: number,
+			capacity	: number
+		}
+	- ..../api/secure/period/{idPeriod}/course/{coursePeriodId}/edit		(post)
+		{
+			startDate	: Date,		(optional)
+			endDate		: Date,		(optional)
+			startTime	: String,
+			endTime		: String,
+			day		: number	(optional)
+		}
+	- ..../api/secure/period/{idPeriod}/course/delete/{idCoursePeriod}		(delete)
+	- ..../api/secure/period/{idPeriod}/course/{idCoursePeriod}			(get)
+	- ..../api/secure/period/{idPeriod}/course/{idCourseperiod}/eligible		(get)
+	- ..../api/secure/period/{idPeriod}/course/{idCourseperiod}/eligible/add	(post)
+		[{
+			employeeId	: number
+		}]
+	- ..../api/secure/period/course/						(get)
+	- ..../api/secure/period/classroom/						(get)
+
+# USER
+	- ..../api/secure/user								(get)
+	- ..../api/secure/user/add							(post)
+		{
+			accountName	: String,
+			password	: String,
+			fullName	: String,
+			gradeId		: number,
+			stream		: String,
+			email		: String,
+			locationId	: number
+		}
+	- ..../api/secure/user/{idUser}							(get)
+	- ..../api/secure/user/{idUser}/edit/active					(post)
+		{
+			active		: boolean
+		}
+	- ..../api/secure/user/{idUser}/edit/roles					(post)
+		[{
+			roleId		: number
+		}]
+	- ..../api/secure/user/trainer							(get)
+	- ..../api/secure/user/eligible/{idPeriod}					(get)
+	- ..../api/secure/user/grade							(get)
+	- ..../api/secure/user/location							(get)
+
+
+# ENROLLMENT
+	- ..../api/secure/enrollment							(get)
+
+# ACHIEVEMENT
+	- ..../api/secure/achievement/{activeRole}					(get)
+	- 
+..../api/secure/achievement/{idUser}/edit					(post)
+		[{
+			bccId		: number,
+			status		: number,
+			term		: number	(optional)
+		}]
+
+# TRAINING MAINTENANCE
+
+	- ..../api/secure/maintenance/{activeRole}					(get)
+	- ..../api/secure/maintenance/{idCoursePeriod}/assessment			(get)
+	- ..../api/secure/maintenance/{idCoursePeriod}/assessment/edit			(post)
+		[{
+			enrolledId	: number,
+			pass		: boolean
+		}]
+	- ..../api/secure/maintenance/{idCoursePeriod}/attendance			(get)
+	- ..../api/secure/maintenance/{idCoursePeriod}/attendance/{idSchedule}		(get)
+	- ..../api/secure/maintenance/{idCoursePeriod}/attendance/{idSchedule}/edit	(post)
+		[{
+			enrolledId	: number,
+			status		: number
+		}]
