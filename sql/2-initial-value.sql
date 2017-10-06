@@ -1,4 +1,5 @@
 -- Delete Data First --
+DELETE FROM [Achievement];
 DELETE FROM [UserRole];
 DELETE FROM [Employee];
 DELETE FROM [Course];
@@ -8,6 +9,8 @@ DELETE FROM [Grade];
 DELETE FROM [Roles];
 
 -- Reseed Primary Key --
+DBCC CHECKIDENT ('[Achievement]', RESEED, 0);
+GO
 DBCC CHECKIDENT ('[UserRole]', RESEED, 0);
 GO
 DBCC CHECKIDENT ('[Employee]', RESEED, 0);
@@ -108,7 +111,19 @@ INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(6, 'Business Writi
 INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(7, 'Communicating Effectively 1', 1);
 INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(8, 'Business Writing 2', 1);
 INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(9, 'Communicating Effectively 2', 1);
-INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(10, 'Presentation Skill 2', 1);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(10, 'Presentation Skill', 1);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(11, 'Computing Foundation', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(12, 'Software Configuration Management', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(13, 'Software Construction', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(14, 'Software Design', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(15, 'Software Engineering Management', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(16, 'Software Engineering Models and Methods', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(17, 'Software Engineering Process', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(18, 'Software Engineering Professional Practice', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(19, 'Software Maintenance', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(20, 'Software Quality', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(21, 'Software Requirements', 0);
+INSERT INTO [Course](courseId, courseName, bccRelated) VALUES(22, 'Software Testing', 0);
 
 SET IDENTITY_INSERT [Course] OFF;
 
@@ -128,3 +143,20 @@ INSERT INTO [UserRole](userRoleId, employeeId, roleId) VALUES (3, 1, 3);
 INSERT INTO [UserRole](userRoleId, employeeId, roleId) VALUES (4, 1, 4);
 
 SET IDENTITY_INSERT [UserRole] OFF;
+
+-- Achievement table init --
+SET IDENTITY_INSERT[Achievement] ON;
+
+
+INSERT INTO [Achievement](achievementId, courseId, userRoleId, status, term) VALUES (1, 1, 4, null, null);
+INSERT INTO [Achievement](achievementId, courseId, userRoleId, status, term) VALUES (2, 2, 4, null, null);
+INSERT INTO [Achievement](achievementId, courseId, userRoleId, status, term) VALUES (3, 3, 4, null, null);
+INSERT INTO [Achievement](achievementId, courseId, userRoleId, status, term) VALUES (4, 4, 4, null, null);
+INSERT INTO [Achievement](achievementId, courseId, userRoleId, status, term) VALUES (5, 5, 4, null, null);
+INSERT INTO [Achievement](achievementId, courseId, userRoleId, status, term) VALUES (6, 6, 4, null, null);
+INSERT INTO [Achievement](achievementId, courseId, userRoleId, status, term) VALUES (7, 7, 4, null, null);
+INSERT INTO [Achievement](achievementId, courseId, userRoleId, status, term) VALUES (8, 8, 4, null, null);
+INSERT INTO [Achievement](achievementId, courseId, userRoleId, status, term) VALUES (9, 9, 4, null, null);
+INSERT INTO [Achievement](achievementId, courseId, userRoleId, status, term) VALUES (10, 10, 4, null, null);
+
+SET IDENTITY_INSERT [Achievement] OFF;

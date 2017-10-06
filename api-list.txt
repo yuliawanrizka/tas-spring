@@ -15,9 +15,8 @@
 
 # DASHBOARD
 
-	- ..../api/secure/dashboard/active						(get)	*
-	- ..../api/secure/dashboard/bcc							(get)	*
-
+	- ..../api/secure/dashboard/active						(get)
+	- ..../api/secure/dashboard/bcc							(get)
 
 
 # PERIOD
@@ -108,9 +107,14 @@
 	- ..../api/secure/enrollment							(get)
 
 # ACHIEVEMENT
-	- ..../api/secure/achievement							(get)	*
-
-
+	- ..../api/secure/achievement/{activeRole}					(get)
+	- 
+..../api/secure/achievement/{idUser}/edit					(post)
+		[{
+			bccId		: number,
+			status		: number,
+			term		: number	(optional)
+		}]
 
 # TRAINING MAINTENANCE
 

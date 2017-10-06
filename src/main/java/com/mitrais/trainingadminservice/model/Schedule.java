@@ -23,7 +23,7 @@ import javax.persistence.Id;
  * 
  */
 @Entity
-public class Schedule {
+public class Schedule  {
     @Id
     @GeneratedValue
     private Long scheduleId;

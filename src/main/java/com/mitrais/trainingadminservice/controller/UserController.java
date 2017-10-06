@@ -13,11 +13,13 @@
 package com.mitrais.trainingadminservice.controller;
 
 import com.mitrais.trainingadminservice.configuration.AppConstant;
+import com.mitrais.trainingadminservice.model.Achievement;
 import com.mitrais.trainingadminservice.model.EligibleParticipants;
 import com.mitrais.trainingadminservice.model.Employee;
 import com.mitrais.trainingadminservice.model.Grade;
 import com.mitrais.trainingadminservice.model.Location;
 import com.mitrais.trainingadminservice.model.UserRole;
+import com.mitrais.trainingadminservice.repository.AchievementRepository;
 import com.mitrais.trainingadminservice.repository.EligibleParticipantsRepository;
 import com.mitrais.trainingadminservice.repository.EmployeeRepository;
 import com.mitrais.trainingadminservice.repository.GradeRepository;
@@ -67,6 +69,8 @@ public class UserController {
     
     @Autowired
     private LocationRepository locationRepository;
+    @Autowired
+    private AchievementRepository achievementRepository;
     
     private HashMap<Long,String> jobFamily = new HashMap<>();
     private HashMap<Long,String> grade = new HashMap<>();
@@ -121,6 +125,15 @@ public class UserController {
                 }
                 
                 userRoleRepository.save(settingRole);
+            }
+            Long userRoleId = userRoleRepository.findByEmployeeIdAndRoleId(dataSaved.getEmployeeId(), new Long("4")).getUserRoleId();
+            for(long j = 1; j <= 10; j++) {
+                Achievement setAchievement = new Achievement();
+                setAchievement.setUserRoleId(userRoleId);
+                setAchievement.setCourseId(j);
+                setAchievement.setStatus(null);
+                setAchievement.setTerm(null);
+                achievementRepository.save(setAchievement);
             }
             
             return ResponseEntity.ok(true);
